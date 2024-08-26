@@ -24,8 +24,10 @@ function mostrarProductos(data) {
 
         card.innerHTML = `
             <img src="${producto.image}" alt="${producto.name}">
-            <h4>${producto.name}</h4>
-            <p>${producto.soldCount}</p>
+            <div>
+                <h4>${producto.name}</h4>
+                <p>${producto.soldCount} vendido/s</p>
+            </div>
             <p>${producto.currency} ${producto.cost}</p>
             <p>${producto.description}</p>
         `;

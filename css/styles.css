@@ -215,3 +215,35 @@ a.custom-card:hover {
   width: 100%;
   border: 2px solid #000000;
 }
+
+#productsContainer {
+  margin: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+article img {
+  padding: 3rem 0;
+  
+}
+
+article div {
+  display: flex;
+  justify-content: space-between;
+}
+
+body {
+  background-color: #FEE3F5;
+}
