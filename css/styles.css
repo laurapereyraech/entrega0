@@ -13,6 +13,10 @@ nav a {
   text-decoration: none;
 }
 
+nav p {
+  color: rgba(255, 255, 255, .50);
+}
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
