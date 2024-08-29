@@ -247,3 +247,12 @@ article div {
 body {
   background-color: #FEE3F5;
 }
+
+/* Responsive para productos */
+.Productos {
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(300, 1fr)); 
+  gap: 20px; 
+  padding: 20px;
+  margin-bottom: 20px;
+}
