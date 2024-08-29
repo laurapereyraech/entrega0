@@ -11,7 +11,7 @@ function validateForm() {
     }
 
     // Si ambos campos están llenos, redireccionar al sitio de portada
-    localStorage.setItem("auth", true);
+    localStorage.setItem("auth", username);
     window.location.href = "index.html";
     return false;
 }
