@@ -46,6 +46,9 @@ nav a {
     padding-top: 6rem;
     padding-bottom: 6rem;
   }
+  .login-container {
+    margin: 100px auto 50px auto;
+  }
 }
 
 .jumbotron p:last-child {
