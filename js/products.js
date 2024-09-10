@@ -1,8 +1,4 @@
 const apiUrl = 'https://japceibal.github.io/emercado-api/cats_products/101.json';
-
-
-
-    // Modificación para que el ID de cada producto se guarde en el localstorage a travez de una API
 const defaultApiUrl = 'https://japceibal.github.io/emercado-api/cats_products/';
 
 async function getProducts() {
@@ -27,6 +23,10 @@ function mostrarProductos(data) {
     for (const producto of data.products) {
         const card = document.createElement('article');
         card.id = producto.id
+        card.onclick = () => {
+            localStorage.setItem("prodID", producto.id)
+            window.location = "product-info.html"
+        }
         card.classList.add('card-producto');
 
         card.innerHTML = `
