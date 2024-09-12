@@ -23,13 +23,13 @@ async function getProducts() {
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('No me pude conectar');
         }
         const data = await response.json();
         products = data.products;
         mostrarProductos(products);
     } catch (error) {
-        console.error('Error fetching data: ', error);
+        console.error('No pudo obtener los datos: ', error);
     }
 }
 
