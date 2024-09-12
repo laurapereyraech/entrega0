@@ -195,7 +195,9 @@ a.custom-card:hover {
 .checked {
   color: orange;
 }
+
 /* Estilos para el formulario de login */
+
 .login-container {
   max-width: 450px;
   margin: 100px auto;
@@ -239,6 +241,7 @@ article {
   border: 2px solid #000;
   border-radius: 6px;
   padding: 12px;
+  cursor: pointer;
 }
 
 article img {

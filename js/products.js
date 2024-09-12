@@ -1,3 +1,4 @@
+const apiUrl = 'https://japceibal.github.io/emercado-api/cats_products/101.json';
 const defaultApiUrl = 'https://japceibal.github.io/emercado-api/cats_products/';
 
 async function getProducts() {
@@ -25,6 +26,10 @@ function mostrarProductos(products) {
 
     products.forEach(product => {
         const card = document.createElement('div');
+        card.onclick = () => {
+            localStorage.setItem("prodID", producto.id)
+            window.location = "product-info.html"
+        }
         card.classList.add('col-md-4', 'mb-4');
         card.innerHTML = `
             <div class="card">
