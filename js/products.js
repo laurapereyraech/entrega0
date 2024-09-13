@@ -27,7 +27,7 @@ function mostrarProductos(products) {
     products.forEach(product => {
         const card = document.createElement('div');
         card.onclick = () => {
-            localStorage.setItem("prodID", producto.id)
+            localStorage.setItem("prodID", product.id)
             window.location = "product-info.html"
         }
         card.classList.add('col-md-4', 'mb-4');
@@ -42,7 +42,7 @@ function mostrarProductos(products) {
                 </div>
             </div>
         `;
-        productsContainer.appendChild(card);
+        productsContainer.appendChild(card);        
     });
 }
 
