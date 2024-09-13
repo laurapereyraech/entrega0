@@ -1,6 +1,8 @@
 const apiUrl = 'https://japceibal.github.io/emercado-api/cats_products/101.json';
 const defaultApiUrl = 'https://japceibal.github.io/emercado-api/cats_products/';
 
+let products = []; // Mueve la declaración de `products` al inicio del archivo
+
 async function getProducts() {
     const categoryId = localStorage.getItem('catID') || '101'; 
     const apiUrl = `${defaultApiUrl}${categoryId}.json`;
@@ -18,8 +20,6 @@ async function getProducts() {
     }
 }
 
-let products = []; // Mueve la declaración de `products` al inicio del archivo
-
 function mostrarProductos(products) {
     const productsContainer = document.getElementById('productsContainer');
     productsContainer.innerHTML = '';
@@ -27,7 +27,7 @@ function mostrarProductos(products) {
     products.forEach(product => {
         const card = document.createElement('div');
         card.onclick = () => {
-            localStorage.setItem("prodID", producto.id)
+            localStorage.setItem("prodID", product.id)
             window.location = "product-info.html"
         }
         card.classList.add('col-md-4', 'mb-4');
@@ -80,6 +80,22 @@ function sortProducts(criteria) {
     }
 
     mostrarProductos(sortedProducts);
+}
+
+// Añade el evento de búsqueda en tiempo real
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('input', filterProductsBySearch);
+
+function filterProductsBySearch() {
+    const searchText = searchInput.value.toLowerCase();
+    
+    // Filtra los productos basándose en el texto ingresado
+    const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(searchText) || 
+        product.description.toLowerCase().includes(searchText)
+    );
+    
+    mostrarProductos(filteredProducts);
 }
 
 getProducts();
