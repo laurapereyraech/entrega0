@@ -16,18 +16,25 @@ const getProductById = async () => {
 
 const displayProductDetail = (product) => {
     const productContainer = document.getElementById('product-detail');
-    console.log(product)
     productContainer.innerHTML = `
-        <h2>${product.name}</h2>
-        <img src="${product.images[0]}" alt="${product.name}">
-        <img src="${product.images[1]}" alt="${product.name}">
-        <img src="${product.images[2]}" alt="${product.name}">
-        <img src="${product.images[3]}" alt="${product.name}">
-        <p>${product.description}</p>
-        <p>Precio: ${product.currency} ${product.cost}</p>
-        <p>Vendidos: ${product.soldCount}</p>
-        <p>Categoria: ${product.category}</p>
+        <picture>
+            <img class="first-image" src="${product.images[0]}" alt="${product.name}"></img>
+            <div class="rest-images" id="images-${product.id}"></div>
+        </picture>
+        <div class="product-info">
+            <h2>${product.name}</h2>
+            <p class="category">Categoria: ${product.category}</p>
+            <p>Precio: ${product.currency} ${product.cost}</p>
+            <p class="description">${product.description}</p>
+            <p>Cantidad de vendidos: ${product.soldCount}</p>
+        </div>
     `;
+
+    const imagesContainer = document.getElementById(`images-${product.id}`)
+    
+    product.images.forEach(img => {
+        if (img !== product.images[0]) imagesContainer.innerHTML += `<img src="${img}" alt="${product.name}"></img>`
+    });
 }
 
 if (!prodID) {

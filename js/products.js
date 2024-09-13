@@ -42,7 +42,7 @@ function mostrarProductos(products) {
                 </div>
             </div>
         `;
-        productsContainer.appendChild(card);
+        productsContainer.appendChild(card);        
     });
 }
 

@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 .jumbotron,
 .card-body,
 .container,
-.site-header {
-  font-family: 'Verdana', serif !important;
+.site-header, body {
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 .jumbotron .display-4 {
@@ -265,4 +267,56 @@ body {
   gap: 20px; 
   padding: 20px;
   margin-bottom: 20px;
+}
+
+/* Product info */
+
+#product-detail {
+  display: flex;
+  padding-top: 20px;
+}
+
+#product-detail picture {
+  display: flex;
+  padding: 10px;
+  background-color: #fff;
+}
+
+#product-detail .rest-images img {
+  width: 10vw;
+  height: 100px;
+  object-fit: cover;
+  
+}
+
+#product-detail .first-image {
+  object-fit: cover;
+  width: 33vw;
+  height: 320px;
+}
+
+#product-detail .rest-images {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+#product-detail h2 {
+  font-size: 3rem;
+  color: #F247C2;
+  font-weight: bold;
+}
+
+.product-info {
+  margin-left: 20px;
+}
+
+#product-detail .description {
+  background-color: #fff;
+}
+
+#product-detail .category {
+  color: #F247C2;
+  font-weight: bold;
 }
