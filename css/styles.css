@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 
 .jumbotron,
 .card-body,
 .container,
 .site-header, body {
-  font-family: 'Montserrat', sans-serif !important;
+  font-family: 'Manrope', sans-serif !important;
 }
 
 .jumbotron .display-4 {
@@ -303,8 +303,7 @@ body {
 }
 
 #product-detail h2 {
-  font-size: 3rem;
-  color: #F247C2;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -312,11 +311,28 @@ body {
   margin-left: 20px;
 }
 
-#product-detail .description {
-  background-color: #fff;
+.price {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.sold-count {
+  font-size: small;
 }
 
 #product-detail .category {
-  color: #F247C2;
   font-weight: bold;
+}
+
+.comments, .comments-section form {
+  width: 46%;
+}
+
+.comments-section form {
+  margin-top: 3.72rem;
+  gap: 12px;
+}
+
+.comments-section form textarea {
+  height: 200px;
 }
