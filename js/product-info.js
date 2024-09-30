@@ -1,4 +1,4 @@
-let prodID = localStorage.getItem('prodID');
+let prodID = localStorage.getItem('prodID'); // Obtener el ID del producto almacenado en localStorage
 const apiLink = 'https://japceibal.github.io/emercado-api';
 const productContainer = document.getElementById('product-detail');
 
@@ -33,26 +33,31 @@ const getProductCommentsById = async () => {
 
 // Función para generar las estrellas según la calificación
 const generateStars = (rating, isClickable = false) => {
-    const totalStars = 5;
-    let fullStars = Math.floor(rating);
-    const decimalPart = rating % 1;
-    const halfStar = decimalPart >= 0.4 && decimalPart < 0.9 ? 1 : 0;
+    const totalStars = 5; // Número total de estrellas
+    let fullStars = Math.floor(rating); // Estrellas llenas según la parte entera de la calificación
+    const decimalPart = rating % 1; // Parte decimal de la calificación
+    const halfStar = decimalPart >= 0.4 && decimalPart < 0.9 ? 1 : 0; // Media estrella si está entre 0.4 y 0.9
 
+    // Si la parte decimal es mayor o igual a 0.9, se suma una estrella completa
     if (decimalPart >= 0.9) {
         fullStars++;
     }
 
-    let starsHtml = '';
+    let starsHtml = ''; // Variable para almacenar el HTML de las estrellas
+    // Generar el HTML de las estrellas
     for (let i = 1; i <= totalStars; i++) {
         if (i <= fullStars) {
+            // Estrella llena
             starsHtml += `<i class="bi bi-star-fill" data-value="${i}" style="cursor: ${isClickable ? 'pointer' : 'default'};"></i>`;
         } else if (i === fullStars + 1 && halfStar) {
+            // Media estrella
             starsHtml += `<i class="bi bi-star-half" data-value="${i}" style="cursor: ${isClickable ? 'pointer' : 'default'};"></i>`;
         } else {
+            // Estrella vacía
             starsHtml += `<i class="bi bi-star" data-value="${i}" style="cursor: ${isClickable ? 'pointer' : 'default'};"></i>`;
         }
     }
-    return starsHtml;
+    return starsHtml; // Retornar el HTML de las estrellas generadas
 };
 
 // Función para mostrar los detalles del producto
@@ -86,6 +91,7 @@ const displayComments = comments => {
     const commentsContainer = document.getElementById('comments-container');
     commentsContainer.className = 'comments';
 
+    // Mostrar cada comentario en el contenedor
     for (const comment of comments) {
         commentsContainer.innerHTML += `
         <div class="comment mt-4">
@@ -93,7 +99,7 @@ const displayComments = comments => {
                 <p class="fs-5 mb-1">${comment.user}</p>
                 <p class="mb-1">${comment.dateTime}</p>
             </div>
-            <div class="stars d-flex">${generateStars(comment.score)}</div>
+            <div class="stars d-flex">${generateStars(comment.score)}</div> <!-- Mostrar estrellas según la calificación del comentario -->
             <p class="mt-2 fst-italic">"${comment.description}"</p>
         </div>
         `;
@@ -101,43 +107,46 @@ const displayComments = comments => {
 
     // Agregar la sección de comentario y calificación
     const commentForm = document.getElementById('comment-form');
-    document.getElementById('comment-rating-container').innerHTML = generateStars(0, true); // Generar estrellas iniciales
+    document.getElementById('comment-rating-container').innerHTML = generateStars(0, true); // Generar estrellas iniciales (vacías y clickeables)
 
-    const ratingStars = document.querySelectorAll('#comment-rating-container i');
-    let selectedCommentRating = 0;
+    const ratingStars = document.querySelectorAll('#comment-rating-container i'); // Seleccionar todas las estrellas generadas
+    let selectedCommentRating = 0; // Variable para almacenar la calificación seleccionada
 
+    // Agregar eventos de clic a las estrellas
     ratingStars.forEach(star => {
         star.addEventListener('click', (e) => {
-            selectedCommentRating = e.target.getAttribute('data-value');
+            selectedCommentRating = e.target.getAttribute('data-value'); // Obtener el valor de la estrella clickeada
             ratingStars.forEach(s => {
+                // Actualizar las estrellas según la calificación seleccionada
                 if (s.getAttribute('data-value') <= selectedCommentRating) {
-                    s.classList.replace('bi-star', 'bi-star-fill');
-                    s.classList.remove('bi-star-half');
+                    s.classList.replace('bi-star', 'bi-star-fill'); // Cambiar a estrella llena
+                    s.classList.remove('bi-star-half'); // Remover clase de media estrella
                 } else {
-                    s.classList.replace('bi-star-fill', 'bi-star');
-                    s.classList.remove('bi-star-half');
+                    s.classList.replace('bi-star-fill', 'bi-star'); // Cambiar a estrella vacía
+                    s.classList.remove('bi-star-half'); // Remover clase de media estrella
                 }
             });
         });
     });
 
+    // Evento al enviar el formulario de comentario
     commentForm.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
-        const commentText = document.getElementById('comment').value;
+        const commentText = document.getElementById('comment').value; // Obtener el texto del comentario
         if (selectedCommentRating > 0 && commentText.trim() !== '') {
-            console.log(`Comentario: ${commentText}, Calificación: ${selectedCommentRating}`);
-            alert(`Gracias por tu comentario y calificación de ${selectedCommentRating} estrella(s)!`);
+            console.log(`Comentario: ${commentText}, Calificación: ${selectedCommentRating}`); // Mostrar en consola
+            alert(`Gracias por tu comentario y calificación de ${selectedCommentRating} estrella(s)!`); // Mensaje de agradecimiento
             // Aquí puedes agregar la lógica para enviar el comentario y calificación al servidor
         } else {
-            alert('Por favor, selecciona una calificación y escribe un comentario antes de enviar.');
+            alert('Por favor, selecciona una calificación y escribe un comentario antes de enviar.'); // Alerta si falta información
         }
     });
 };
 
 // Comprobar si hay un ID de producto
 if (!prodID) {
-    window.location = 'products.html';
+    window.location = 'products.html'; // Redirigir si no hay ID de producto
 } else {
-    getProductById();
-    getProductCommentsById();
+    getProductById(); // Obtener detalles del producto
+    getProductCommentsById(); // Obtener comentarios del producto
 }
