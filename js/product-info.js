@@ -118,14 +118,14 @@ const displayComments = comments => {
             selectedCommentRating = e.target.getAttribute('data-value'); // Obtener el valor de la estrella clickeada
             ratingStars.forEach(s => {
                 // Actualizar las estrellas según la calificación seleccionada
-                if (s.getAttribute('data-value') <= selectedCommentRating) {
-                    s.classList.replace('bi-star', 'bi-star-fill'); // Cambiar a estrella llena
-                    s.classList.remove('bi-star-half'); // Remover clase de media estrella
-                } else {
-                    s.classList.replace('bi-star-fill', 'bi-star'); // Cambiar a estrella vacía
-                    s.classList.remove('bi-star-half'); // Remover clase de media estrella
-                }
+                s.classList.remove('bi-star-fill', 'bi-star-half', 'bi-star');
+                s.classList.add(selectedCommentRating >= s.getAttribute('data-value') ? 'bi-star-fill' : 'bi-star');
             });
+            // Manejar media estrella
+            if (selectedCommentRating > 0 && selectedCommentRating < ratingStars.length) {
+                ratingStars[selectedCommentRating].classList.remove('bi-star');
+                ratingStars[selectedCommentRating].classList.add('bi-star-half');
+            }
         });
     });
 
@@ -136,17 +136,45 @@ const displayComments = comments => {
         if (selectedCommentRating > 0 && commentText.trim() !== '') {
             console.log(`Comentario: ${commentText}, Calificación: ${selectedCommentRating}`); // Mostrar en consola
             alert(`Gracias por tu comentario y calificación de ${selectedCommentRating} estrella(s)!`); // Mensaje de agradecimiento
-            // Aquí puedes agregar la lógica para enviar el comentario y calificación al servidor
+
+            // Crear un objeto de comentario simulado
+            const newComment = {
+                user: 'Usuario Anónimo', // Puedes cambiarlo por el nombre del usuario si tienes esa información
+                dateTime: new Date().toLocaleString(), // Fecha y hora actual
+                score: selectedCommentRating,
+                description: commentText
+            };
+
+            // Mostrar el nuevo comentario en la sección de comentarios
+            displayNewComment(newComment);
+
+            // Limpiar el formulario
+            commentForm.reset();
+            document.getElementById('comment-rating-container').innerHTML = generateStars(0, true); // Reiniciar estrellas
+            selectedCommentRating = 0; // Reiniciar calificación seleccionada
         } else {
             alert('Por favor, selecciona una calificación y escribe un comentario antes de enviar.'); // Alerta si falta información
         }
     });
 };
 
-// Comprobar si hay un ID de producto
-if (!prodID) {
-    window.location = 'products.html'; // Redirigir si no hay ID de producto
-} else {
-    getProductById(); // Obtener detalles del producto
-    getProductCommentsById(); // Obtener comentarios del producto
-}
+// Función para mostrar un nuevo comentario
+const displayNewComment = (comment) => {
+    const commentsContainer = document.getElementById('comments-container');
+    commentsContainer.innerHTML += `
+    <div class="comment mt-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <p class="fs-5 mb-1">${comment.user}</p>
+            <p class="mb-1">${comment.dateTime}</p>
+        </div>
+        <div class="stars d-flex">${generateStars(comment.score)}</div> <!-- Mostrar estrellas según la calificación del comentario -->
+        <p class="mt-2 fst-italic">"${comment.description}"</p>
+    </div>
+    `;
+};
+
+// Inicializar funciones al cargar la página
+document.addEventListener('DOMContentLoaded', async () => {
+    getProductById(); // Llamar a la función para obtener el producto
+    await getProductCommentsById(); // Llamar a la función para obtener los comentarios del producto
+});
