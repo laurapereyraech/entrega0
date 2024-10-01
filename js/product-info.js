@@ -2,6 +2,30 @@ let prodID = localStorage.getItem('prodID'); // Obtener el ID del producto almac
 const apiLink = 'https://japceibal.github.io/emercado-api';
 const productContainer = document.getElementById('product-detail');
 
+// Función para mostrar los productos relacionados
+const displayRelatedProducts = (relatedProducts) => {
+    const relatedProductsContainer = document.getElementById('related-products-container');
+    
+    relatedProducts.forEach(product => {
+        const relatedProductHTML = `
+            <div class="card m-2" style="width: 18rem; cursor: pointer;" onclick="setProductId(${product.id})">
+                <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5
+                      </div>
+            </div>
+        `;
+        relatedProductsContainer.innerHTML += relatedProductHTML;
+    });
+};
+
+// Función para guardar el ID del producto en localStorage y redirigir a la misma página
+const setProductId = (id) => {
+    localStorage.setItem('prodID', id);
+    window.location = 'product-info.html';
+};
+
+
 // Función para obtener el producto por ID
 const getProductById = async () => {
     try {
@@ -84,6 +108,12 @@ const displayProductDetail = (product) => {
     product.images.forEach(img => {
         if (img !== product.images[0]) imagesContainer.innerHTML += `<img src="${img}" alt="${product.name}"></img>`;
     });
+     //Modificacion para detectar productos relacionados
+     if (product.relatedProducts && product.relatedProducts.length > 0) {
+        displayRelatedProducts(product.relatedProducts);
+    } else {
+        console.log('No hay productos relacionados para mostrar.');
+    }
 };
 
 // Función para mostrar los comentarios
