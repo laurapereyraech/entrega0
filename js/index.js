@@ -12,11 +12,3 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location = "products.html"
     });
 });
-
-let autenticado = localStorage.getItem("auth");
-
-if (!autenticado) window.location.href = "login.html";
-else {
-    const user = document.getElementById("user")
-    user.textContent = localStorage.getItem("auth")
-}
