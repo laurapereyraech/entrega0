@@ -30,7 +30,15 @@
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
           <li class="nav-item">
-            <p id="user"></p>
+            <div class="dropdown">
+              <a id="user" class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/cart.html">Carrito</a></li>
+                <li><a class="dropdown-item" href="/my-profile.html">Mi perfil</a></li>
+                <li><button class="dropdown-item" id="cerrarSesion">Cerrar sesion</button></li>
+              </ul>
+            </div>
           </li>
         </ul>
       </div>

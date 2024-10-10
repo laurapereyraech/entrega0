@@ -39,3 +39,16 @@ let getJSONData = function(url){
         return result;
     });
 }
+
+let autenticado = localStorage.getItem("auth");
+
+if (!autenticado) window.location.href = "login.html";
+else {
+    const user = document.getElementById("user")
+    user.textContent = localStorage.getItem("auth")
+    const cerrarSesion = document.getElementById("cerrarSesion")
+    cerrarSesion.addEventListener("click", function () {
+        localStorage.removeItem("auth");
+        window.location.href = "login.html";
+    });
+}
