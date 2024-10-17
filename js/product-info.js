@@ -7,15 +7,24 @@ const displayRelatedProducts = (relatedProducts) => {
     const relatedProductsContainer = document.getElementById('related-products-container');
     
     relatedProducts.forEach(product => {
-        const relatedProductHTML = `
-            <div class="card m-2" style="width: 18rem; cursor: pointer;" onclick="setProductId(${product.id})">
+        const card = document.createElement('div');
+        card.onclick = () => {
+            localStorage.setItem("prodID", product.id);
+            window.location = "product-info.html";
+        }
+        card.classList.add('col-md-4', 'mb-4');
+        card.innerHTML = `
+            <div class="card text-white bg-dark">
                 <img src="${product.image}" class="card-img-top" alt="${product.name}">
                 <div class="card-body">
-                    <h5 class="card-title">${product.name}</h5
-                      </div>
+                    <h5 class="card-title">${product.name}</h5>
+                    <p class="card-text">${product.description}</p>
+                    <p class="card-text"><small class="text-muted">${product.soldCount} vendido/s</small></p>
+                    <p class="card-text"><strong>${product.currency} ${product.cost}</strong></p>
+                </div>
             </div>
         `;
-        relatedProductsContainer.innerHTML += relatedProductHTML;
+        relatedProductsContainer.appendChild(card);       
     });
 };
 
@@ -207,4 +216,28 @@ const displayNewComment = (comment) => {
 document.addEventListener('DOMContentLoaded', async () => {
     getProductById(); // Llamar a la función para obtener el producto
     await getProductCommentsById(); // Llamar a la función para obtener los comentarios del producto
+});
+
+// Espera a que el DOM esté completamente cargado
+document.addEventListener("DOMContentLoaded", function() {
+    const modeToggle = document.getElementById("mode-toggle");
+
+    // Verifica el modo guardado en localStorage
+    const currentMode = localStorage.getItem("mode");
+    if (currentMode === "night") {
+        document.body.classList.add("night-mode");
+        modeToggle.textContent = "Modo Día";
+    }
+
+    // Cambia entre Modo Día y Modo Noche
+    modeToggle.addEventListener("click", function() {
+        document.body.classList.toggle("night-mode");
+        if (document.body.classList.contains("night-mode")) {
+            modeToggle.textContent = "Modo Día";
+            localStorage.setItem("mode", "night"); // Guarda la preferencia
+        } else {
+            modeToggle.textContent = "Modo Noche";
+            localStorage.setItem("mode", "day"); // Guarda la preferencia
+        }
+    });
 });
