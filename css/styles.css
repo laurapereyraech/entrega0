@@ -356,7 +356,22 @@ body.night-mode .btn {
 }
 
 body.night-mode .btn:hover {
-  background-color: #0056b3; /* Color de fondo del botón al pasar el mouse */
-}
+  background-color: #0056b3; /* Color de fondo del botón al pasar el mouse */}
 
+ .Boton_Perfil {
+  width: cover;
+  padding: cover;
+  background-color: #ff69b4;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 2em;
+  border: 2px solid #f674b5;
+  }
 
+  .Boton_Perfil:hover {
+    background-color: #ff5ca8;
+  }
+
+  .form-control {
+    border-radius: 20px;
+  }
