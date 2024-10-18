@@ -1,6 +1,5 @@
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Selecciona los elementos del formulario
+    // Selecciona los elementos del formulario y de la imagen de perfil
     const firstNameInput = document.getElementById('first-name');
     const middleNameInput = document.getElementById('second-name');
     const lastNameInput = document.getElementById('last-name');
@@ -8,6 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailInput = document.getElementById('email');
     const phoneInput = document.getElementById('phone');
     const profileForm = document.getElementById('profile-form');
+    
+    const profileImageInput = document.getElementById('profile-image');
+    const profileImageDisplay = document.getElementById('profile-image-display');
+    const removeImageButton = document.getElementById('remove-image');
+    
+    // Modal para la imagen de perfil
+    const profileImageModal = new bootstrap.Modal(document.getElementById('profileImageModal'));
+    const modalProfileImage = document.getElementById('modal-profile-image');
     
     // Mostrar datos al usuario
     const displayFullName = document.getElementById('display-full-name');
@@ -27,6 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Actualizar la visualización
             updateDisplayData(profileData);
+            
+            // Cargar imagen de perfil si existe
+            if (profileData.profileImage) {
+                profileImageDisplay.src = profileData.profileImage;
+            }
         }
     }
   
@@ -38,21 +50,21 @@ document.addEventListener('DOMContentLoaded', function() {
         displayPhone.textContent = data.phone || 'Tu teléfono';
     }
   
-  
     // Guardar datos del perfil
-    function saveProfileData() {
+    function saveProfileData(profileImage) {
         const profileData = {
             firstName: firstNameInput.value,
             middleName: middleNameInput.value,
             lastName: lastNameInput.value,
             secondLastName: secondLastNameInput.value,
             email: emailInput.value,
-            phone: phoneInput.value
+            phone: phoneInput.value,
+            profileImage: profileImage || localStorage.getItem('profileImage') // Guardar la imagen en localStorage
         };
         localStorage.setItem('profileData', JSON.stringify(profileData));
         updateDisplayData(profileData);
     }
-  
+    
     // Validar campos obligatorios
     function validateForm() {
         if (!firstNameInput.value || !lastNameInput.value || !emailInput.value) {
@@ -62,15 +74,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
   
-    // Cargar datos del perfil
+    // Convertir la imagen a Base64 y guardarla
+    profileImageInput.addEventListener('change', function() {
+        const file = profileImageInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64Image = reader.result;
+                localStorage.setItem('profileImage', base64Image);
+                profileImageDisplay.src = base64Image; // Mostrar la imagen cargada
+            };
+            reader.readAsDataURL(file); // Convertir la imagen a Base64
+        }
+    });
+
+    // Cargar datos del perfil al cargar la página
     loadProfileData();
     
-    // guardar los datos
+    // Guardar los datos al enviar el formulario
     profileForm.addEventListener('submit', (e) => {
         e.preventDefault();
         if (validateForm()) {
-            saveProfileData();
+            const profileImage = localStorage.getItem('profileImage');
+            saveProfileData(profileImage);
             alert('Datos guardados correctamente');
         }
     });
-  });
+    
+    // Mostrar imagen en modal al hacer clic
+    profileImageDisplay.addEventListener('click', function() {
+        modalProfileImage.src = profileImageDisplay.src; // Asigna la imagen al modal
+        profileImageModal.show(); // Muestra el modal
+    });
+
+    // Eliminar la imagen de perfil y restaurar la predeterminada
+    removeImageButton.addEventListener('click', function() {
+        localStorage.removeItem('profileImage'); // Eliminar la imagen de localStorage
+        profileImageDisplay.src = 'img/img_perfil.png'; // Restaurar imagen predeterminada
+    });
+});
