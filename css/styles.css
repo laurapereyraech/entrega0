@@ -335,7 +335,29 @@ body {
 .comments-section form textarea {
   height: 200px;
 }
+body.night-mode {
+  background-color: #121212; /* Color de fondo oscuro */
+  color: #ffffff; /* Color de texto claro */
+}
 
+body.night-mode .card {
+  background-color: #1f1f1f; /* Color de fondo de la tarjeta */
+  border-color: #333333; /* Color del borde de la tarjeta */
+}
+
+body.night-mode .card-title,
+body.night-mode .card-text {
+  color: #ffffff; /* Color de texto dentro de la tarjeta */
+}
+
+body.night-mode .btn {
+  background-color: #007bff; /* Color de fondo de los botones */
+  color: #ffffff; /* Color de texto en los botones */
+}
+
+body.night-mode .btn:hover {
+  background-color: #0056b3; /* Color de fondo del botón al pasar el mouse */
+}
 
 
 
