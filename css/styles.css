@@ -335,3 +335,40 @@ body {
 .comments-section form textarea {
   height: 200px;
 }
+
+
+
+
+
+/*  Botón de guardar del perfil */
+button[type="submit"] {
+  width: cover;
+  padding: cover;
+  background-color: #ff69b4;
+  background:  #ff5ca8;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  border: 2px solid #f674b5;
+}
+
+button[type="submit"]:hover {
+  background-color: #ff5ca8;
+}
+
+
+
+/*  Formulario de perfil */
+
+#user-data-display p {
+  margin-bottom: 5px;
+}
+
+#user-data-display i {
+  margin-right: 5px;
+  color: #6c757d;
+}
+
+.form-control {
+  border-radius: 20px;
+}
