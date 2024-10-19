@@ -1,0 +1,38 @@
+body {
+    font-family: 'Raleway', sans-serif;
+}
+
+.navbar {
+    background-color: #212529;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-remove, .btn-save {
+    background-color: #FEE3F5; /* Color rosado para los botones */
+    color: black; /* Color de texto */
+    width: auto;
+    padding: 5px 10px;
+    border: none; /* Sin borde */
+    border-radius: 0.5rem; /* Bordes redondeados */
+}
+
+input.form-control {
+    border-radius: 0.5rem; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra en la parte inferior */
+}
+
+footer {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    background-color: #f8f9fa;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
