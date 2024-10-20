@@ -224,8 +224,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const modeToggle = document.getElementById("mode-toggle");
 
     // Verifica el modo guardado en localStorage
-    const currentMode = localStorage.getItem("mode");
-    if (currentMode === "night") {
+    const currentMode = localStorage.getItem("theme");
+    if (currentMode === "dark") {
         document.body.classList.add("night-mode");
         modeToggle.textContent = "Modo Día";
     }
@@ -235,10 +235,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.body.classList.toggle("night-mode");
         if (document.body.classList.contains("night-mode")) {
             modeToggle.textContent = "Modo Día";
-            localStorage.setItem("mode", "night"); // Guarda la preferencia
+            localStorage.setItem("theme", "dark"); // Guarda la preferencia
         } else {
             modeToggle.textContent = "Modo Noche";
-            localStorage.setItem("mode", "day"); // Guarda la preferencia
+            localStorage.setItem("theme", "light"); // Guarda la preferencia
         }
     });
 });
