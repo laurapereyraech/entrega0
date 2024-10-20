@@ -374,3 +374,50 @@ body.night-mode .btn:hover {
 .form-control {
   border-radius: 20px;
 }
+
+/* ... otros estilos ... */
+
+body.night-mode {
+  background-color: #121212; /* Color de fondo oscuro */
+  color: #ffffff; /* Color de texto claro */
+}
+
+body.night-mode .navbar {
+  background-color: #1f1f1f; /* Color de fondo de la barra de navegación en modo oscuro */
+}
+
+body.night-mode .navbar .nav-link {
+  color: #ffffff; /* Color de texto blanco para los enlaces en modo oscuro */
+}
+
+body.night-mode .navbar .nav-link:hover {
+  color: #FEE3F5; /* Color de texto al pasar el mouse */
+}
+
+body.night-mode .card {
+  background-color: #1f1f1f; /* Color de fondo de la tarjeta */
+  border-color: #333333; /* Color del borde de la tarjeta */
+}
+
+body.night-mode .btn {
+  background-color: #FEE3F5; /* Color de fondo rosado para los botones */
+  color: #000000; /* Color de texto en los botones */
+}
+
+body.night-mode .btn:hover {
+  background-color: #FFB3DA; /* Color de fondo del botón al pasar el mouse */
+}
+
+/* Estilos para el formulario de perfil */
+#user-data-display p {
+  margin-bottom: 5px;
+}
+
+#user-data-display i {
+  margin-right: 5px;
+  color: #6c757d;
+}
+
+.form-control {
+  border-radius: 20px;
+}

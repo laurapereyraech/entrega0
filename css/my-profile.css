@@ -65,6 +65,10 @@ footer {
     background-color: #f8f9fa;
 }
 
+footer p {
+    margin: 0; /* Quitar márgenes en el footer */
+}
+
 .text-muted {
     color: #6c757d !important;
 }
@@ -90,3 +94,23 @@ footer {
     display: flex;
     align-items: center; /* Centrar verticalmente el switch y la etiqueta */
 }
+
+footer {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    background-color: #f8f9fa;
+}
+
+body.dark footer {
+    background-color: #121212; /* Mismo negro que el fondo del modo oscuro */
+    color: #ffffff; /* Texto blanco en el footer en modo oscuro */
+}
+
+body.dark footer a {
+    color: #ffffff; /* Enlaces en blanco en el footer en modo oscuro */
+}
+
+body.dark footer a:hover {
+    color: #FFB3DA; /* Color rosado al pasar el mouse sobre los enlaces en el footer */
+}
+

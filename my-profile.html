@@ -123,5 +123,41 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/init.js"></script>
     <script src="js/my-profile.js"></script>
+
+    <script>
+        // Función para aplicar el tema guardado
+        function applyTheme() {
+            const theme = localStorage.getItem('theme');
+            const body = document.body;
+            const navbar = document.querySelector('.navbar');
+            const themeSwitch = document.getElementById('theme-switch');
+
+            if (theme === 'dark') {
+                body.classList.add('dark');
+                body.classList.remove('light');
+                navbar.classList.add('dark');
+                themeSwitch.checked = true;
+            } else {
+                body.classList.add('light');
+                body.classList.remove('dark');
+                navbar.classList.remove('dark');
+                themeSwitch.checked = false;
+            }
+        }
+
+        // Guardar el tema en localStorage al enviar el formulario
+        document.getElementById('profile-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita el envío del formulario por defecto
+
+            // Guarda la preferencia del tema
+            const themeSwitch = document.getElementById('theme-switch');
+            localStorage.setItem('theme', themeSwitch.checked ? 'dark' : 'light');
+            applyTheme(); // Aplica el tema
+            alert('Preferencias guardadas'); // Mensaje de confirmación (puedes cambiarlo o eliminarlo)
+        });
+
+        // Aplicar el tema al cargar la página
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
 </body>
 </html>
