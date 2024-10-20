@@ -18,9 +18,6 @@ const displayRelatedProducts = (relatedProducts) => {
                 <img src="${product.image}" class="card-img-top" alt="${product.name}">
                 <div class="card-body">
                     <h5 class="card-title">${product.name}</h5>
-                    <p class="card-text">${product.description}</p>
-                    <p class="card-text"><small class="text-muted">${product.soldCount} vendido/s</small></p>
-                    <p class="card-text"><strong>${product.currency} ${product.cost}</strong></p>
                 </div>
             </div>
         `;
@@ -45,8 +42,16 @@ const getProductById = async () => {
         let product = await response.json();
         displayProductDetail(product);
     } catch (error) {
-        alert(error.message);
-        window.location = 'products.html';
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message,
+            confirmButtonText: "Volver al listado"
+          }).then(res => {
+            if (res.isConfirmed) {
+                window.location = 'products.html';
+            }
+          })
     }
 };
 
@@ -65,33 +70,24 @@ const getProductCommentsById = async () => {
 };
 
 // Función para generar las estrellas según la calificación
-const generateStars = (rating, isClickable = false) => {
-    const totalStars = 5; // Número total de estrellas
-    let fullStars = Math.floor(rating); // Estrellas llenas según la parte entera de la calificación
-    const decimalPart = rating % 1; // Parte decimal de la calificación
-    const halfStar = decimalPart >= 0.4 && decimalPart < 0.9 ? 1 : 0; // Media estrella si está entre 0.4 y 0.9
+function generateStars(rating, isClickable = false) {
+    return Array.from({ length: 5 }, (_, i) => {
+        const fullStars = Math.floor(rating);
+        const decimalPart = rating % 1;
+        const halfStar = decimalPart >= 0.4 && decimalPart < 0.9;
 
-    // Si la parte decimal es mayor o igual a 0.9, se suma una estrella completa
-    if (decimalPart >= 0.9) {
-        fullStars++;
-    }
-
-    let starsHtml = ''; // Variable para almacenar el HTML de las estrellas
-    // Generar el HTML de las estrellas
-    for (let i = 1; i <= totalStars; i++) {
-        if (i <= fullStars) {
-            // Estrella llena
-            starsHtml += `<i class="bi bi-star-fill" data-value="${i}" style="cursor: ${isClickable ? 'pointer' : 'default'};"></i>`;
-        } else if (i === fullStars + 1 && halfStar) {
-            // Media estrella
-            starsHtml += `<i class="bi bi-star-half" data-value="${i}" style="cursor: ${isClickable ? 'pointer' : 'default'};"></i>`;
+        let className;
+        if (i < fullStars) {
+            className = 'bi bi-star-fill';
+        } else if (i === fullStars && halfStar) {
+            className = 'bi bi-star-half';
         } else {
-            // Estrella vacía
-            starsHtml += `<i class="bi bi-star" data-value="${i}" style="cursor: ${isClickable ? 'pointer' : 'default'};"></i>`;
+            className = 'bi bi-star';
         }
-    }
-    return starsHtml; // Retornar el HTML de las estrellas generadas
-};
+
+        return `<i class="${className}" data-value="${i + 1}" style="cursor: ${isClickable ? 'pointer' : 'default'};"></i>`;
+    }).join('');
+}  
 
 // Función para mostrar los detalles del producto
 const displayProductDetail = (product) => {
@@ -151,40 +147,45 @@ const displayComments = comments => {
     const ratingStars = document.querySelectorAll('#comment-rating-container i'); // Seleccionar todas las estrellas generadas
     let selectedCommentRating = 0; // Variable para almacenar la calificación seleccionada
 
+    const feedbackElement = document.getElementById('feedback-calificacion');
+    
     // Agregar eventos de clic a las estrellas
-    ratingStars.forEach(star => {
+    ratingStars.forEach((star, index) => {
         star.addEventListener('click', (e) => {
-            selectedCommentRating = e.target.getAttribute('data-value'); // Obtener el valor de la estrella clickeada
-            ratingStars.forEach(s => {
+            selectedCommentRating = parseInt(e.target.getAttribute('data-value')); // Obtener el valor de la estrella clickeada
+            ratingStars.forEach((s, i) => {
                 // Actualizar las estrellas según la calificación seleccionada
                 s.classList.remove('bi-star-fill', 'bi-star-half', 'bi-star');
-                s.classList.add(selectedCommentRating >= s.getAttribute('data-value') ? 'bi-star-fill' : 'bi-star');
+                s.classList.add(selectedCommentRating > i ? 'bi-star-fill' : 'bi-star');
             });
+            
             // Manejar media estrella
-            if (selectedCommentRating > 0 && selectedCommentRating < ratingStars.length) {
+            if (selectedCommentRating > 0 && selectedCommentRating < ratingStars.length && e.target.classList.contains('bi-star')) {
                 ratingStars[selectedCommentRating].classList.remove('bi-star');
                 ratingStars[selectedCommentRating].classList.add('bi-star-half');
             }
+            feedbackElement.textContent = `Has seleccionado ${selectedCommentRating} estrellas`;
         });
-    });
+    })
 
     // Evento al enviar el formulario de comentario
     commentForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
-        const commentText = document.getElementById('comment').value; // Obtener el texto del comentario
+        event.preventDefault(); 
+        const commentText = document.getElementById('comment').value;
         if (selectedCommentRating > 0 && commentText.trim() !== '') {
-            console.log(`Comentario: ${commentText}, Calificación: ${selectedCommentRating}`); // Mostrar en consola
-            alert(`Gracias por tu comentario y calificación de ${selectedCommentRating} estrella(s)!`); // Mensaje de agradecimiento
+            Swal.fire({
+                icon: "success",
+                title: "Calificación agregada correctamente",
+                text: `Gracias por tu comentario y tu calificación de ${selectedCommentRating} estrella/s!`
+              });
 
-            // Crear un objeto de comentario simulado
             const newComment = {
-                user: 'Usuario Anónimo', // Puedes cambiarlo por el nombre del usuario si tienes esa información
-                dateTime: new Date().toLocaleString(), // Fecha y hora actual
+                user: 'Usuario Anónimo',
+                dateTime: new Date().toLocaleString(),
                 score: selectedCommentRating,
                 description: commentText
             };
 
-            // Mostrar el nuevo comentario en la sección de comentarios
             displayNewComment(newComment);
 
             // Limpiar el formulario
