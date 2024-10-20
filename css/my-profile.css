@@ -1,9 +1,41 @@
 body {
     font-family: 'Raleway', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.light {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body.dark {
+    background-color: #121212;
+    color: #ffffff;
 }
 
 .navbar {
-    background-color: #212529;
+    background-color: #212529; /* Color de la barra de navegación */
+    transition: background-color 0.3s;
+}
+
+.navbar .nav-link {
+    color: #ffffff; /* Color de texto blanco para los enlaces */
+}
+
+.navbar .nav-link:hover {
+    color: #FEE3F5; /* Color de texto al pasar el mouse */
+}
+
+.navbar.light {
+    background-color: #343a40; /* Color de la barra de navegación en modo claro */
+}
+
+.navbar.light .nav-link {
+    color: #ffffff; /* Color de texto blanco para los enlaces en modo claro */
+}
+
+.navbar.dark {
+    background-color: #000000; /* Color de la barra de navegación en modo oscuro */
 }
 
 .button-container {
@@ -35,4 +67,26 @@ footer {
 
 .text-muted {
     color: #6c757d !important;
+}
+
+.form-check-input {
+    cursor: pointer;
+    width: 50px; /* Ajustar el ancho del switch */
+    height: 25px; /* Ajustar la altura del switch */
+    border-radius: 50px; /* Bordes redondeados */
+    transition: background-color 0.3s, transform 0.3s; /* Suavizar la transición */
+}
+
+.form-check-input:checked {
+    background-color: #4CAF50; /* Color de fondo cuando está activado */
+}
+
+.form-check-label {
+    margin-left: 10px; /* Espaciado a la izquierda del texto */
+    font-weight: bold; /* Negrita para el texto */
+}
+
+.form-check {
+    display: flex;
+    align-items: center; /* Centrar verticalmente el switch y la etiqueta */
 }

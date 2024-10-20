@@ -112,4 +112,26 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.removeItem('profileImage'); // Eliminar la imagen de localStorage
         profileImageDisplay.src = 'img/img_perfil.png'; // Restaurar imagen predeterminada
     });
+
+    // Seleccionar el switch de tema
+    const themeSwitch = document.getElementById('theme-switch');
+
+    // Función para aplicar el tema
+    function applyTheme(theme) {
+        document.body.className = theme;
+        const navbar = document.querySelector('.navbar');
+        navbar.className = `navbar navbar-expand-lg ${theme}`; // Cambia la clase de la barra de navegación
+    }
+
+    // Cargar el tema del almacenamiento local o establecer el tema claro por defecto
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(currentTheme);
+    themeSwitch.checked = (currentTheme === 'dark');
+
+    // Evento para cambiar el tema al hacer clic en el switch
+    themeSwitch.addEventListener('change', function() {
+        const newTheme = this.checked ? 'dark' : 'light';
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme); // Guardar el tema en localStorage
+    });
 });
