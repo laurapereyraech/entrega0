@@ -2,6 +2,36 @@ let prodID = localStorage.getItem('prodID'); // Obtener el ID del producto almac
 const apiLink = 'https://japceibal.github.io/emercado-api';
 const productContainer = document.getElementById('product-detail');
 
+// Función para guardar el producto en el carrito
+const saveProductToCart = (product) => {
+    // Obtenemos el carrito actual del localStorage o inicializamos uno vacío
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    
+    // Creamos el objeto del producto a guardar
+    const productToAdd = {
+        id: product.id,
+        name: product.name,
+        count: 1, // Cantidad inicial
+        unitCost: product.cost,
+        currency: product.currency,
+        image: product.images[0] // Primera imagen del producto
+    };
+
+    // Verificamos si el producto ya existe en el carrito
+    const existingProductIndex = cartItems.findIndex(item => item.id === product.id);
+    
+    if (existingProductIndex >= 0) {
+        // Si el producto ya existe, incrementamos la cantidad
+        cartItems[existingProductIndex].count += 1;
+    } else {
+        // Si no existe, lo agregamos al array
+        cartItems.push(productToAdd);
+    }
+
+    // Guardamos el carrito actualizado en localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+};
+
 // Función para mostrar los productos relacionados
 const displayRelatedProducts = (relatedProducts) => {
     const relatedProductsContainer = document.getElementById('related-products-container');
@@ -30,7 +60,6 @@ const setProductId = (id) => {
     localStorage.setItem('prodID', id);
     window.location = 'product-info.html';
 };
-
 
 // Función para obtener el producto por ID
 const getProductById = async () => {
@@ -106,6 +135,7 @@ const displayProductDetail = (product) => {
             <p class="price">${product.currency} ${product.cost}</p>
             <p class="description">${product.description}</p>
             <p class="sold-count">${product.soldCount} vendidos</p>
+            <button id="buyButton" class="btn btn-primary">Comprar</button>
         </div>
     `;
 
@@ -113,8 +143,25 @@ const displayProductDetail = (product) => {
     product.images.forEach(img => {
         if (img !== product.images[0]) imagesContainer.innerHTML += `<img src="${img}" alt="${product.name}"></img>`;
     });
-     //Modificacion para detectar productos relacionados
-     if (product.relatedProducts && product.relatedProducts.length > 0) {
+
+    // Agregamos el evento click al botón de comprar
+    document.getElementById('buyButton').addEventListener('click', () => {
+        // Guardamos el producto en el carrito
+        saveProductToCart(product);
+        
+        // Mostramos mensaje de éxito
+        Swal.fire({
+            icon: "success",
+            title: "¡Producto agregado al carrito!",
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+            // Redirigimos al carrito
+            window.location.href = 'cart.html';
+        });
+    });
+
+    if (product.relatedProducts && product.relatedProducts.length > 0) {
         displayRelatedProducts(product.relatedProducts);
     } else {
         console.log('No hay productos relacionados para mostrar.');
@@ -134,7 +181,7 @@ const displayComments = comments => {
                 <p class="fs-5 mb-1">${comment.user}</p>
                 <p class="mb-1">${comment.dateTime}</p>
             </div>
-            <div class="stars d-flex">${generateStars(comment.score)}</div> <!-- Mostrar estrellas según la calificación del comentario -->
+            <div class="stars d-flex">${generateStars(comment.score)}</div>
             <p class="mt-2 fst-italic">"${comment.description}"</p>
         </div>
         `;
@@ -142,24 +189,22 @@ const displayComments = comments => {
 
     // Agregar la sección de comentario y calificación
     const commentForm = document.getElementById('comment-form');
-    document.getElementById('comment-rating-container').innerHTML = generateStars(0, true); // Generar estrellas iniciales (vacías y clickeables)
+    document.getElementById('comment-rating-container').innerHTML = generateStars(0, true);
 
-    const ratingStars = document.querySelectorAll('#comment-rating-container i'); // Seleccionar todas las estrellas generadas
-    let selectedCommentRating = 0; // Variable para almacenar la calificación seleccionada
+    const ratingStars = document.querySelectorAll('#comment-rating-container i');
+    let selectedCommentRating = 0;
 
     const feedbackElement = document.getElementById('feedback-calificacion');
     
     // Agregar eventos de clic a las estrellas
     ratingStars.forEach((star, index) => {
         star.addEventListener('click', (e) => {
-            selectedCommentRating = parseInt(e.target.getAttribute('data-value')); // Obtener el valor de la estrella clickeada
+            selectedCommentRating = parseInt(e.target.getAttribute('data-value'));
             ratingStars.forEach((s, i) => {
-                // Actualizar las estrellas según la calificación seleccionada
                 s.classList.remove('bi-star-fill', 'bi-star-half', 'bi-star');
                 s.classList.add(selectedCommentRating > i ? 'bi-star-fill' : 'bi-star');
             });
             
-            // Manejar media estrella
             if (selectedCommentRating > 0 && selectedCommentRating < ratingStars.length && e.target.classList.contains('bi-star')) {
                 ratingStars[selectedCommentRating].classList.remove('bi-star');
                 ratingStars[selectedCommentRating].classList.add('bi-star-half');
@@ -188,12 +233,11 @@ const displayComments = comments => {
 
             displayNewComment(newComment);
 
-            // Limpiar el formulario
             commentForm.reset();
-            document.getElementById('comment-rating-container').innerHTML = generateStars(0, true); // Reiniciar estrellas
-            selectedCommentRating = 0; // Reiniciar calificación seleccionada
+            document.getElementById('comment-rating-container').innerHTML = generateStars(0, true);
+            selectedCommentRating = 0;
         } else {
-            alert('Por favor, selecciona una calificación y escribe un comentario antes de enviar.'); // Alerta si falta información
+            alert('Por favor, selecciona una calificación y escribe un comentario antes de enviar.');
         }
     });
 };
@@ -207,7 +251,7 @@ const displayNewComment = (comment) => {
             <p class="fs-5 mb-1">${comment.user}</p>
             <p class="mb-1">${comment.dateTime}</p>
         </div>
-        <div class="stars d-flex">${generateStars(comment.score)}</div> <!-- Mostrar estrellas según la calificación del comentario -->
+        <div class="stars d-flex">${generateStars(comment.score)}</div>
         <p class="mt-2 fst-italic">"${comment.description}"</p>
     </div>
     `;
@@ -217,28 +261,29 @@ const displayNewComment = (comment) => {
 document.addEventListener('DOMContentLoaded', async () => {
     getProductById(); // Llamar a la función para obtener el producto
     await getProductCommentsById(); // Llamar a la función para obtener los comentarios del producto
-});
-
-// Espera a que el DOM esté completamente cargado
-document.addEventListener("DOMContentLoaded", function() {
-    const modeToggle = document.getElementById("mode-toggle");
 
     // Verifica el modo guardado en localStorage
     const currentMode = localStorage.getItem("theme");
     if (currentMode === "dark") {
         document.body.classList.add("night-mode");
-        modeToggle.textContent = "Modo Día";
+        const modeToggle = document.getElementById("mode-toggle");
+        if (modeToggle) {
+            modeToggle.textContent = "Modo Día";
+        }
     }
 
     // Cambia entre Modo Día y Modo Noche
-    modeToggle.addEventListener("click", function() {
-        document.body.classList.toggle("night-mode");
-        if (document.body.classList.contains("night-mode")) {
-            modeToggle.textContent = "Modo Día";
-            localStorage.setItem("theme", "dark"); // Guarda la preferencia
-        } else {
-            modeToggle.textContent = "Modo Noche";
-            localStorage.setItem("theme", "light"); // Guarda la preferencia
-        }
-    });
+    const modeToggle = document.getElementById("mode-toggle");
+    if (modeToggle) {
+        modeToggle.addEventListener("click", function() {
+            document.body.classList.toggle("night-mode");
+            if (document.body.classList.contains("night-mode")) {
+                modeToggle.textContent = "Modo Día";
+                localStorage.setItem("theme", "dark");
+            } else {
+                modeToggle.textContent = "Modo Noche";
+                localStorage.setItem("theme", "light");
+            }
+        });
+    }
 });
