@@ -56,7 +56,6 @@ else {
 }
 
 const currentMode = localStorage.getItem("theme");
-console.log(currentMode)
 if (currentMode === "dark") {
   document.body.classList.add("night-mode");
 }
