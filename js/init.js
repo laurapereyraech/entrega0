@@ -59,3 +59,41 @@ const currentMode = localStorage.getItem("theme");
 if (currentMode === "dark") {
   document.body.classList.add("night-mode");
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleButton = document.querySelector(".toggle-dropdown");
+  const dropdownMenu = document.querySelector(".dropdown-menu-custom");
+
+  if (toggleButton && dropdownMenu) {
+    toggleButton.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      if (!dropdownMenu.classList.contains("show")) {
+        dropdownMenu.classList.add("show"); // Activa el menú inmediatamente
+
+        setTimeout(() => {
+          dropdownMenu.classList.add("active"); // Agrega la animación después de activar el menú
+        }, 10); // Un pequeño delay para asegurar la transición
+
+      } else {
+        dropdownMenu.classList.remove("active"); // Quita la animación
+        setTimeout(() => {
+          dropdownMenu.classList.remove("show"); // Oculta el menú después de la animación
+        }, 300); // Tiempo que coincide con la duración de la animación
+      }
+    });
+
+    // Opcional: cerrar el menú al hacer clic fuera de él
+    document.addEventListener("click", function (e) {
+      if (
+        !toggleButton.contains(e.target) &&
+        !dropdownMenu.contains(e.target)
+      ) {
+        dropdownMenu.classList.remove("active");
+        setTimeout(() => {
+          dropdownMenu.classList.remove("show");
+        }, 300);
+      }
+    });
+  }
+});
