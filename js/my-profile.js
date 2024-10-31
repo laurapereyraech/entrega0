@@ -11,6 +11,45 @@ document.addEventListener("DOMContentLoaded", function () {
   const profileImageInput = document.getElementById("profile-image");
   const profileImageDisplay = document.getElementById("profile-image-display");
   const removeImageButton = document.getElementById("remove-image");
+  // Función de validación en tiempo real
+  function validateInput(input) {
+    if (input.value.trim() === "") {
+      input.classList.add("is-invalid");
+      input.classList.remove("is-valid");
+    } else {
+      input.classList.remove("is-invalid");
+      input.classList.add("is-valid");
+    }
+  }
+
+  // Agrega validaciones en tiempo real a los campos obligatorios
+  firstNameInput.addEventListener("input", () => validateInput(firstNameInput));
+  lastNameInput.addEventListener("input", () => validateInput(lastNameInput));
+  emailInput.addEventListener("input", () => validateInput(emailInput));
+
+  // Validación completa al enviar el formulario
+  profileForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    validateInput(firstNameInput);
+    validateInput(lastNameInput);
+    validateInput(emailInput);
+
+    // Si no hay campos inválidos, guarda los datos
+    if (profileForm.querySelectorAll(".is-invalid").length === 0) {
+      const profileImage = localStorage.getItem("profileImage");
+      saveProfileData(profileImage);
+      Swal.fire({
+        icon: "success",
+        title: "Datos guardados correctamente",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Por favor, completa todos los campos obligatorios.",
+      });
+    }
+  });
 
   // Modal para la imagen de perfil
   const profileImageModal = new bootstrap.Modal(
