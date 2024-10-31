@@ -32,15 +32,26 @@
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="cart.html">
+              Mi carrito <span id="cart-count-badge" class="badge bg-secondary">0</span>
+            </a>
+          </li>            
+          <li class="nav-item">
             <div class="dropdown">
-              <a id="user" class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a
+                id="user"
+                class="btn btn-secondary toggle-dropdown"
+                href="#"
+              >
+                Usuario
               </a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu dropdown-menu-custom">
                 <li><a class="dropdown-item" href="/cart.html">Carrito</a></li>
                 <li><a class="dropdown-item" href="/my-profile.html">Mi perfil</a></li>
-                <li><button class="dropdown-item" id="cerrarSesion">Cerrar sesion</button></li>
+                <li><button class="dropdown-item" id="cerrarSesion">Cerrar sesión</button></li>
               </ul>
             </div>
+            
           </li>
         </ul>
       </div>

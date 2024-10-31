@@ -493,3 +493,19 @@ tbody, td, tfoot, th, thead, tr {
   padding: 1rem;
   gap: 4px;
 }
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.dropdown-menu-custom.active {
+  transform: scaleY(1);
+  opacity: 1;
+}
