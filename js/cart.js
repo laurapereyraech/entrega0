@@ -92,3 +92,37 @@ function eliminarProducto(index) {
 
 // Inicializar mostrando productos en el carrito
 mostrarProductos();
+function showShippingForm() {
+  // Obtener el elemento del formulario de envío
+  const shippingForm = document.getElementById('shipping-form');
+
+  // Desplazar la página hasta el formulario de envío
+  shippingForm.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Obtener el formulario de envío
+const shippingForm = document.getElementById('shipping-form-container');
+
+// Agregar un evento de envío al formulario
+shippingForm.addEventListener('submit', (event) => {
+  event.preventDefault(); // Evitar que se envíe el formulario
+
+  // Verificar si todos los campos obligatorios están completos
+  if (shippingForm.reportValidity()) {
+    // Todos los campos están completos, enviar el formulario
+    shippingForm.submit();
+  } else {
+    // Mostrar un mensaje de error
+    showErrorMessage('Por favor, complete todos los campos obligatorios.');
+  }
+});
+
+// Función para mostrar un mensaje de error
+function showErrorMessage(message) {
+  // Crear un elemento de alerta y mostrarlo en la página
+  const alert = document.createElement('div');
+  alert.classList.add('alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
+  alert.setAttribute('role', 'alert');
+  alert.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+  document.body.appendChild(alert);
+}

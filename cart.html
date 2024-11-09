@@ -104,7 +104,7 @@
           Moneda <span id="moneda"></span>
         </p>
         <div class="d-flex justify-content-center mt-4">
-          <button class="btn btn-dark btn-lg">Comprar</button>
+          <button class="btn btn-dark btn-lg" onclick="showShippingForm()">Comprar</button>
         </div>
       </aside>
       <section>
@@ -139,8 +139,60 @@
         <div></div>
       </div>
     </div>
+    
+    <div class="shipping-direction" id="shipping-form">
+      <h2>Dirección de envío</h2>
+      <form id="shipping-form-container">
+        <div>
+          <label for="department">Departamento</label>
+          <select id="department" required>
+            <option value="">Seleccione un departamento</option>
+            <option value="montevideo">Montevideo</option>
+            <option value="artigas">Artigas</option>
+            <option value="canelones">Canelones</option>
+            <option value="cerro_largo">Cerro Largo</option>
+            <option value="colonia">Colonia</option>
+            <option value="durazno">Durazno</option>
+            <option value="flores">Flores</option>
+            <option value="florida">Florida</option>
+            <option value="lavalleja">Lavalleja</option>
+            <option value="maldonado">Maldonado</option>
+            <option value="paysandu">Paysandú</option>
+            <option value="rio_negro">Río Negro</option>
+            <option value="rivera">Rivera</option>
+            <option value="rocha">Rocha</option>
+            <option value="salto">Salto</option>
+            <option value="san_jose">San José</option>
+            <option value="soriano">Soriano</option>
+            <option value="tacuarembo">Tacuarembó</option>
+            <option value="treinta_y_tres">Treinta y Tres</option>
+          </select>
+        </div>
+        <div>
+          <label for="locality">Localidad</label>
+          <input type="text" id="locality" required />
+        </div>
+        <div>
+          <label for="street">Calle</label>
+          <input type="text" id="street" required />
+        </div>
+        <div>
+          <label for="number">Número</label>
+          <input type="text" id="number" required />
+        </div>
+        <div>
+          <label for="apartment">Esquina</label>
+          <input type="text" id="apartment" required />
+        </div>
+        <button type="submit" class="btn btn-dark btn-lg">Siguiente ></button>
+      </form>
+    </div>
+    
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/init.js"></script>
     <script src="js/cart.js"></script>
+    
+    
+    
   </body>
 </html>
