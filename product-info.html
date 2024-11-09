@@ -1,97 +1,134 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>eMercado - Todo lo que busques está aquí</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i"
+      rel="stylesheet"
+    />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+  </head>
 
-<body>
+  <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav w-100 justify-content-between">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="categories.html">Categorías</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="sell.html">Vender</a>
-                    </li>
-                    <li class="nav-item">
-                        <div class="dropdown">
-                            <a id="user" class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/cart.html">Carrito</a></li>
-                                <li><a class="dropdown-item" href="/my-profile.html">Mi perfil</a></li>
-                                <li><button class="dropdown-item" id="cerrarSesion">Cerrar sesión</button></li>
-                            </ul>
-                        </div>
-                    </li>
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav w-100 justify-content-between">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="categories.html">Categorías</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="sell.html">Vender</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="cart.html">
+                Mi carrito
+                <span id="cart-count-badge" class="badge bg-secondary">0</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <div class="dropdown">
+                <a id="user" class="btn btn-secondary toggle-dropdown" href="#">
+                  Usuario
+                </a>
+                <ul class="dropdown-menu dropdown-menu-custom">
+                  <li>
+                    <a class="dropdown-item" href="/cart.html">Carrito</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/my-profile.html">Mi perfil</a>
+                  </li>
+                  <li>
+                    <button class="dropdown-item" id="cerrarSesion">
+                      Cerrar sesión
+                    </button>
+                  </li>
                 </ul>
-                <!-- Switch para cambiar entre Modo Día y Modo Noche -->
-<div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" id="mode-toggle">
-    <label class="form-check-label" for="mode-toggle"></label>
-  </div>
-  
-            </div>
+              </div>
+            </li>
+          </ul>
+          <!-- Switch para cambiar entre Modo Día y Modo Noche -->
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="mode-toggle">
+            <label class="form-check-label" for="mode-toggle"></label>
+          </div>
         </div>
+      </div>
     </nav>
+    
     <main>
-        <div class="container d-flex flex-column" id="product-detail">
-           
-        </div>
-        
-        <section class="d-flex flex-row justify-content-between container comments-section my-4">
-            <div id="comments-container">
-                <h3>Reseñas</h3>
-            </div>
-            <form class="d-flex flex-column" id="comment-form">
-                <label for="comment">Dejanos tu comentario:</label>
-                <textarea name="comment" id="comment" required></textarea>
-                <div class="rating" id="comment-rating-container">
-                    <!-- Las estrellas se generarán aqui -->
-                </div>
-                <div id="feedback-calificacion"></div>
-                <input type="submit" value="Enviar" class="btn btn-light" />
-            </form>
-        </section>
+      <div class="container d-flex flex-column" id="product-detail">
+      </div>
 
-        <!-- Productos relacionados -->
-        <section id="related-products" class="container my-4">
-            <h3>Productos Relacionados</h3>
-            <div class="d-flex" id="related-products-container"></div>
-        </section>
+      <section class="d-flex flex-row justify-content-between container comments-section my-4">
+        <div id="comments-container">
+          <h3>Reseñas</h3>
+        </div>
+        <form class="d-flex flex-column" id="comment-form">
+          <label for="comment">Dejanos tu comentario:</label>
+          <textarea name="comment" id="comment" required></textarea>
+          <div class="rating" id="comment-rating-container">
+            <!-- Las estrellas se generarán aqui -->
+          </div>
+          <div id="feedback-calificacion"></div>
+          <input type="submit" value="Enviar" class="btn btn-light" />
+        </form>
+      </section>
+
+      <!-- Productos relacionados -->
+      <section id="related-products" class="container my-4">
+        <h3>Productos Relacionados</h3>
+        <div class="d-flex" id="related-products-container"></div>
+      </section>
     </main>
+    
     <footer class="text-muted">
-        <div class="container">
-            <p class="float-end">
-                <a href="#">Volver arriba</a>
-            </p>
-            <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
-        </div>
+      <div class="container">
+        <p class="float-end">
+          <a href="#">Volver arriba</a>
+        </p>
+        <p>
+          Este sitio forma parte de
+          <a href="https://jovenesaprogramar.edu.uy/" target="_blank">
+            Jóvenes a Programar
+          </a>
+        </p>
+      </div>
     </footer>
+    
     <div id="spinner-wrapper">
-        <div class="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
+      <div class="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -100,22 +137,21 @@
     <script src="js/init.js"></script>
     <script src="js/product-info.js"></script>
     <script>
+      // Guardar el tema en localStorage al enviar el formulario
+      document
+        .getElementById("profile-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Evita el envío del formulario por defecto
 
-    // Guardar el tema en localStorage al enviar el formulario
-    document.getElementById('profile-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Evita el envío del formulario por defecto
+          // Guarda la preferencia del tema
+          const themeSwitch = document.getElementById("theme-switch");
+          localStorage.setItem("theme", themeSwitch.checked ? "dark" : "light");
+          applyTheme(); // Aplica el tema
+          alert("Preferencias guardadas"); // Mensaje de confirmación (puedes cambiarlo o eliminarlo)
+        });
 
-        // Guarda la preferencia del tema
-        const themeSwitch = document.getElementById('theme-switch');
-        localStorage.setItem('theme', themeSwitch.checked ? 'dark' : 'light');
-        applyTheme(); // Aplica el tema
-        alert('Preferencias guardadas'); // Mensaje de confirmación (puedes cambiarlo o eliminarlo)
-    });
-
-    // Aplicar el tema al cargar la página
-    document.addEventListener('DOMContentLoaded', applyTheme);
-</script>
-    
-</body>
-
+      // Aplicar el tema al cargar la página
+      document.addEventListener("DOMContentLoaded", applyTheme);
+    </script>
+  </body>
 </html>
