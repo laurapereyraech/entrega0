@@ -438,12 +438,16 @@ tbody, td, tfoot, th, thead, tr {
  border: 1px solid transparent;
  padding: .25rem .5rem;
  border-radius: .2rem;
- margin-left: 4px;
+ margin-left: .5rem;
+ text-align: center;
 }
 
-.carrito input, .carrito .btn {
- margin-right: 8px;
- font-size: 1.1rem !important;
+.carrito aside ul li {
+ border-bottom: 2px solid black;
+}
+
+.carrito aside ul li:last-child {
+ border: none;
 }
 
 .moneda {
@@ -453,7 +457,7 @@ tbody, td, tfoot, th, thead, tr {
  gap: 4px;
 }
 
-/* Formulario de envio*/
+/* Formulario de envío */
 .shipping-direction {
  max-width: 400px;
  margin: 50px auto;
@@ -467,8 +471,8 @@ tbody, td, tfoot, th, thead, tr {
 .shipping-direction h2 {
  text-align: center;
  margin-bottom: 30px;
- color: #000000; /* Texto negro */
- font-weight: bold; /* Opcional: para hacerlo más visible */
+ color: #000000;
+ font-weight: bold;
 }
 
 .shipping-direction form {
@@ -491,9 +495,9 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 #shipping-form-container button[type="submit"] {
- background-color: #000000 !important; /* Fondo negro */
- color: #FEE3F5 !important; /* Texto rosado */
- border: none !important;
+ background-color: #000000;
+ color: #FEE3F5;
+ border: none;
  padding: 12px 20px;
  border-radius: 5px;
  cursor: pointer;
@@ -502,6 +506,22 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 #shipping-form-container button[type="submit"]:hover {
- background-color: #333333 !important; /* Un negro más claro al hover */
- color: #FEE3F5 !important; /* Mantiene el texto rosado en hover */
+ background-color: #333333;
+ color: #FEE3F5;
+}
+
+.dropdown-menu-custom {
+ position: absolute;
+ top: 100%;
+ left: 0;
+ transform: scaleY(0);
+ transform-origin: top;
+ opacity: 0;
+ transition: transform 0.3s ease, opacity 0.3s ease;
+ z-index: 1000;
+}
+
+.dropdown-menu-custom.active {
+ transform: scaleY(1);
+ opacity: 1;
 }
