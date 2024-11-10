@@ -65,23 +65,62 @@ function mostrarProductos() {
 // Función para actualizar cantidad, subtotal y total
 function updateQuantity(event, index) {
   const newQuantity = parseInt(event.target.value);
-  productos[index].count = newQuantity;
-
-  // Actualiza el subtotal del producto
-  const newSubtotal = productos[index].unitCost * newQuantity;
-  document.getElementById(`subtotal-${index}`).textContent = newSubtotal.toFixed(2);
-  document.getElementById(`count-${index}`).textContent = newQuantity;
-
-  // Recalcula el total y total de productos
-  const newTotal = productos.reduce((acc, product) => acc + product.unitCost * product.count, 0);
-  const newTotalItems = productos.reduce((acc, product) => acc + product.count, 0);
   
-  containerTotal.textContent = `Total: $${newTotal.toFixed(2)}`;
-  cartCountBadge.textContent = newTotalItems; // Actualizar el badge
+  // Calcular el nuevo subtotal antes de actualizar el DOM
+  const newSubtotal = productos[index].unitCost * newQuantity;
+  productos[index].count = newQuantity;  // Actualizar la cantidad en el carrito
+
+  // Actualizar el subtotal y la cantidad en el DOM
+  document.getElementById(`subtotal-${index}`).textContent = newSubtotal.toFixed(2);
+  document.getElementById(`count-${index}`).textContent = newQuantity; // Actualizar la cantidad en la tabla
+  
+  // Recalcular y actualizar total, badge, y el total del carrito
+  recalcularTotal(); // Recalcular el total general
+  cartCountBadge.textContent = productos.reduce((acc, product) => acc + product.count, 0); // Actualizar el badge con el total de productos
+  containerTotal.textContent = `Total: $${newSubtotal.toFixed(2)}`;
 
   // Guarda los cambios en localStorage
   localStorage.setItem("cartItems", JSON.stringify(productos));
 }
+
+// Función para recalcular el total del carrito
+function recalcularTotal() {
+  let total = 0;
+  productos.forEach((product) => {
+    total += product.unitCost * product.count;
+  });
+
+  // Obtener el tipo de envío y calcular el costo correspondiente
+  const tipoEnvio = document.querySelector("#opcionesCompra select:nth-of-type(2)").value;
+  let costoEnvio = 0;
+  switch (tipoEnvio) {
+    case "express":
+      costoEnvio = total * 0.1; // 10%
+      break;
+    case "premium":
+      costoEnvio = total * 0.15; // 15%
+      break;
+    case "estandar":
+      costoEnvio = 0; // Gratis
+      break;
+  }
+
+  // Actualizar los elementos del DOM con los totales
+  const subtotalProductos = document.getElementById("subtotalProductos");
+  const costoEnvioElement = document.getElementById("costoEnvio");
+  const totalCompra = document.getElementById("totalCompra");
+
+  subtotalProductos.textContent = `$${total.toFixed(2)}`;
+  costoEnvioElement.textContent = `$${costoEnvio.toFixed(2)}`;
+  totalCompra.textContent = `$${(total + costoEnvio).toFixed(2)}`;
+
+  // Actualizar el total de productos en el badge
+  cantidadProductos.textContent = productos.length; // Actualizar la cantidad de productos en el carrito
+  cartCountBadge.textContent = productos.reduce((acc, product) => acc + product.count, 0); // Mostrar total de productos
+}
+
+// Asegúrate de que el valor del tipo de envío se recalcule cuando cambie
+document.querySelector("#opcionesCompra select:nth-of-type(2)").addEventListener("change", recalcularTotal);
 
 // Función para eliminar un producto
 function eliminarProducto(index) {
