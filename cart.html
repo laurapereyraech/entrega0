@@ -166,10 +166,44 @@
           <label for="apartment">Esquina</label>
           <input type="text" id="apartment" required />
         </div>
-        <button type="submit" class="btn btn-dark btn-lg">Siguiente ></button>
+        <button type="button" class="btn btn-dark btn-lg" onclick="scrollToOpcionesCompra()">Siguiente ></button>
+</form>
       </form>
-    </div>
+      </form>
+    </div><br><br><br><br>
     
+    <div id="opcionesCompra" class="opciones-compra-container">
+      <div class="opciones-formulario">
+          <h4>Forma de Pago</h4>
+          <select>
+              <option value="credito">Tarjeta de crédito</option>
+              <option value="debito">Tarjeta de débito</option>
+              <option value="efectivo">Efectivo</option>
+          </select>
+  
+          <h4>Tipo de Envío</h4>
+          <select>
+              <option value="estandar">Estándar (Gratis)</option>
+              <option value="express">Express 24 horas (10%)</option>
+              <option value="premium">Premium 2 a 5 días (15%)</option>
+          </select>
+      </div>
+
+ 
+  
+      <div class="resumen-total">
+          <h4>Subtotal</h4>
+          <p>Productos: <span id="subtotalProductos">$0.00</span></p>
+          <p>Envío: <span id="costoEnvio">$90.00</span></p>
+          <p><strong>Total: <span id="totalCompra">$90.00</span></strong></p>
+          <div> <button id="finish-purchase" onclick="finalizarCompra()">Finalizar compra</button></div>
+        </div>
+          
+          
+     
+  </div><br><br><br>
+
+
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/init.js"></script>
     <script src="js/cart.js"></script>

@@ -126,3 +126,8 @@ function showErrorMessage(message) {
   alert.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
   document.body.appendChild(alert);
 }
+
+function scrollToOpcionesCompra() {
+  // Desplaza la página hacia el contenedor de opciones de compra
+  document.getElementById('opcionesCompra').scrollIntoView({ behavior: 'smooth' });
+}
