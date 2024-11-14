@@ -5,6 +5,9 @@
 .container,
 .site-header, body {
  font-family: 'Manrope', sans-serif !important;
+ grid-template-columns: repeat(auto-fit, minmax(300, 1fr)); 
+ gap: 20px; 
+
 }
 
 .jumbotron .display-4 {
@@ -383,6 +386,9 @@ body.night-mode .btn:hover {
 
 .carrito {
  width: 100%; 
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+ gap: 1rem;
 }
 
 .carrito aside {
@@ -449,6 +455,33 @@ tbody, td, tfoot, th, thead, tr {
 .carrito aside ul li:last-child {
  border: none;
 }
+
+@media (max-width: 768px) {
+  .carrito {
+    grid-template-columns: 1fr; /* Pasa de dos columnas a una sola en pantallas pequeñas */
+  }
+
+  .carrito aside, .carrito section {
+    min-width: 100%;
+    padding: 1rem; /* Reduce el padding para pantallas pequeñas */
+  }
+
+  .carrito .tabla {
+    padding: 0.5rem;
+  }
+
+  .carrito input {
+    width: 2.5rem; /* Ajuste de tamaño de input en pantallas pequeñas */
+  }
+
+  .carrito ul li article img {
+    height: 65px; /* Reduce el tamaño de las imágenes en pantallas pequeñas */
+  }
+}
+
+
+
+
 
 .moneda {
  background-color: #ffffff75;
