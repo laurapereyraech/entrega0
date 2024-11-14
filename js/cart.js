@@ -1,172 +1,167 @@
-let productos = localStorage.getItem("cartItems");
-productos = JSON.parse(productos) || [];
+// Carga inicial de productos desde localStorage
+let productos = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-const containerProductos = document.getElementById("productosSeleccionados");
-const cantidadProductos = document.getElementById("cantidadProductos");
-const tabla = document.getElementById("tabla");
-const containerTotal = document.getElementById("total");
-const moneda = document.getElementById("moneda");
-const cartCountBadge = document.getElementById("cart-count-badge");
-
-// Mostrar productos y actualizar cantidades
+// Mostrar productos en el carrito y actualizar cantidades y totales
 function mostrarProductos() {
-  containerProductos.innerHTML = "";
-  tabla.innerHTML = "";
+  document.getElementById("productosSeleccionados").innerHTML = "";
+  document.getElementById("tabla").innerHTML = "";
   let total = 0;
   let totalItems = 0;
-
+  
   if (!productos.length) {
-    containerProductos.textContent = "No existen elementos seleccionados";
-    cantidadProductos.textContent = 0;
-    cartCountBadge.textContent = 0;
+    actualizarVistaVacia();
   } else {
     productos.forEach((product, index) => {
       const subtotal = product.unitCost * product.count;
       total += subtotal;
       totalItems += product.count;
-
-      // Crear fila en la tabla para el producto
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${product.name} x<span id="count-${index}">${product.count}</span></td>
-        <td class="text-end">$<span id="subtotal-${index}">${subtotal}</span></td>
-      `;
-      tabla.appendChild(row);
-      moneda.textContent += `${product.currency} `;
-
-      // Crear tarjeta del producto en la lista
-      const card = document.createElement("li");
-      card.innerHTML = `
-        <article class="d-flex my-2 flex-row align-items-center">
-          <img src="${product.image}" alt="${product.name}" />
-          <div class="d-flex flex-column justify-content-between mx-2">
-            <h3 class="fs-4 mb-0">${product.name}</h3>
-            <p class="mb-0"><span>${product.currency} $</span>${product.unitCost}</p>
-          </div>
-          <label for="cantidad">x</label>
-          <input name="cantidad" type="number" value="${product.count}" min="1" data-index="${index}" />
-          <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">Eliminar</button>
-        </article>
-      `;
-      containerProductos.appendChild(card);
-
-      // Añadir evento para actualizar cantidad en tiempo real
-      const quantityInput = card.querySelector(`input[name="cantidad"]`);
-      quantityInput.addEventListener("input", (event) => updateQuantity(event, index));
+      agregarFilaTabla(product, index, subtotal);
+      agregarCardProducto(product, index);
     });
 
-    // Actualizar la cantidad de productos y el badge
-    cantidadProductos.textContent = productos.length;
-    cartCountBadge.textContent = totalItems; // Mostrar total de productos en el badge
-    containerTotal.textContent = `Total: $${total.toFixed(2)}`;
+    actualizarTotales(total, totalItems);
   }
 }
 
-// Función para actualizar cantidad, subtotal y total
-function updateQuantity(event, index) {
+function actualizarVistaVacia() {
+  document.getElementById("productosSeleccionados").textContent = "No existen elementos seleccionados";
+  document.getElementById("cantidadProductos").textContent = 0;
+  document.getElementById("cart-count-badge").textContent = 0;
+  document.getElementById("total").textContent = "$0.00";
+}
+
+function agregarFilaTabla(product, index, subtotal) {
+  const fila = document.createElement("tr");
+  fila.innerHTML = `
+    <td>${product.name} x<span id="count-${index}">${product.count}</span></td>
+    <td class="text-end">$<span id="subtotal-${index}">${subtotal.toFixed(2)}</span></td>
+  `;
+  document.getElementById("tabla").appendChild(fila);
+  document.getElementById("moneda").textContent = product.currency;
+}
+
+function agregarCardProducto(product, index) {
+  const card = document.createElement("li");
+  card.innerHTML = `
+    <article class="d-flex my-2 flex-row align-items-center">
+      <img src="${product.image}" alt="${product.name}" />
+      <div class="d-flex flex-column justify-content-between mx-2">
+        <h3 class="fs-4 mb-0">${product.name}</h3>
+        <p class="mb-0"><span>${product.currency} $</span>${product.unitCost}</p>
+      </div>
+      <label for="cantidad">x</label>
+      <input name="cantidad" type="number" value="${product.count}" min="1" data-index="${index}" />
+      <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">Eliminar</button>
+    </article>
+  `;
+  document.getElementById("productosSeleccionados").appendChild(card);
+  card.querySelector(`input[name="cantidad"]`).addEventListener("input", (event) => actualizarCantidad(event, index));
+}
+
+function actualizarTotales(total, totalItems) {
+  document.getElementById("cantidadProductos").textContent = productos.length;
+  document.getElementById("cart-count-badge").textContent = totalItems;
+  document.getElementById("total").textContent = `Total: $${total.toFixed(2)}`;
+}
+
+// Actualizar cantidad de producto
+function actualizarCantidad(event, index) {
   const newQuantity = parseInt(event.target.value);
-  
-  // Calcular el nuevo subtotal antes de actualizar el DOM
-  const newSubtotal = productos[index].unitCost * newQuantity;
-  productos[index].count = newQuantity;  // Actualizar la cantidad en el carrito
+  productos[index].count = newQuantity;
+  recalcularTotal();
+  actualizarVistaLocalStorage();
+}
 
-  // Actualizar el subtotal y la cantidad en el DOM
-  document.getElementById(`subtotal-${index}`).textContent = newSubtotal.toFixed(2);
-  document.getElementById(`count-${index}`).textContent = newQuantity; // Actualizar la cantidad en la tabla
-  
-  // Recalcular y actualizar total, badge, y el total del carrito
-  recalcularTotal(); // Recalcular el total general
-  cartCountBadge.textContent = productos.reduce((acc, product) => acc + product.count, 0); // Actualizar el badge con el total de productos
-  containerTotal.textContent = `Total: $${newSubtotal.toFixed(2)}`;
+// Recalcular total del carrito
+function recalcularTotal() {
+  let total = 0;
+  productos.forEach(product => total += product.unitCost * product.count);
 
-  // Guarda los cambios en localStorage
+  const tipoEnvio = document.querySelector("#opciones-compra select:nth-of-type(2)").value;
+  const costoEnvio = calcularCostoEnvio(total, tipoEnvio);
+
+  actualizarVistaTotales(total, costoEnvio);
+}
+
+function calcularCostoEnvio(total, tipoEnvio) {
+  const tarifas = { express: 0.07, premium: 0.15, estandar: 0.05 };
+  return total * (tarifas[tipoEnvio] || 0);
+}
+
+function actualizarVistaTotales(total, costoEnvio) {
+  document.getElementById("subtotalProductos").textContent = `$${total.toFixed(2)}`;
+  document.getElementById("costoEnvio").textContent = `$${costoEnvio.toFixed(2)}`;
+  document.getElementById("totalCompra").textContent = `$${(total + costoEnvio).toFixed(2)}`;
+  document.getElementById("cart-count-badge").textContent = productos.reduce((acc, product) => acc + product.count, 0);
+}
+
+function actualizarVistaLocalStorage() {
   localStorage.setItem("cartItems", JSON.stringify(productos));
 }
 
-// Función para recalcular el total del carrito
-function recalcularTotal() {
-  let total = 0;
-  productos.forEach((product) => {
-    total += product.unitCost * product.count;
-  });
-
-  // Obtener el tipo de envío y calcular el costo correspondiente
-  const tipoEnvio = document.querySelector("#opcionesCompra select:nth-of-type(2)").value;
-  let costoEnvio = 0;
-  switch (tipoEnvio) {
-    case "express":
-      costoEnvio = total * 0.1; // 10%
-      break;
-    case "premium":
-      costoEnvio = total * 0.15; // 15%
-      break;
-    case "estandar":
-      costoEnvio = 0; // Gratis
-      break;
-  }
-
-  // Actualizar los elementos del DOM con los totales
-  const subtotalProductos = document.getElementById("subtotalProductos");
-  const costoEnvioElement = document.getElementById("costoEnvio");
-  const totalCompra = document.getElementById("totalCompra");
-
-  subtotalProductos.textContent = `$${total.toFixed(2)}`;
-  costoEnvioElement.textContent = `$${costoEnvio.toFixed(2)}`;
-  totalCompra.textContent = `$${(total + costoEnvio).toFixed(2)}`;
-
-  // Actualizar el total de productos en el badge
-  cantidadProductos.textContent = productos.length; // Actualizar la cantidad de productos en el carrito
-  cartCountBadge.textContent = productos.reduce((acc, product) => acc + product.count, 0); // Mostrar total de productos
-}
-
-// Asegúrate de que el valor del tipo de envío se recalcule cuando cambie
-document.querySelector("#opcionesCompra select:nth-of-type(2)").addEventListener("change", recalcularTotal);
-
-// Función para eliminar un producto
+// Eliminar producto
 function eliminarProducto(index) {
-  productos.splice(index, 1); 
-  localStorage.setItem("cartItems", JSON.stringify(productos)); 
+  productos.splice(index, 1);
+  actualizarVistaLocalStorage();
   mostrarProductos();
 }
 
-// Inicializar mostrando productos en el carrito
-mostrarProductos();
-function showShippingForm() {
-  // Obtener el elemento del formulario de envío
-  const shippingForm = document.getElementById('shipping-form');
-
-  // Desplazar la página hasta el formulario de envío
-  shippingForm.scrollIntoView({ behavior: 'smooth' });
+function scrollearHasta(id) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+  }
 }
 
-// Obtener el formulario de envío
-const shippingForm = document.getElementById('shipping-form-container');
+// Validar datos de compra
+function validarDatosCompra() {
+  if (!productos.length) {
+    Swal.fire("Error", 'Por favor, agregue al menos un producto al carrito.', "error").then(() => {
+      setTimeout(() => scrollearHasta('cart-count-badge'), 200);
+    });
+    return false;
+  }
 
-// Agregar un evento de envío al formulario
-shippingForm.addEventListener('submit', (event) => {
-  event.preventDefault(); // Evitar que se envíe el formulario
+  const direccionCampos = ['departamento', 'localidad', 'calle', 'numero', 'apartamento'];
+  if (!direccionCampos.every(campo => document.getElementById(campo).value)) {
+    Swal.fire("Error", 'Por favor, complete todos los campos de dirección.', "error").then(() => {
+      setTimeout(() => scrollearHasta('opciones-envio'), 200);
+    });
+    return false;
+  }
 
-  // Verificar si todos los campos obligatorios están completos
-  if (shippingForm.reportValidity()) {
-    // Todos los campos están completos, enviar el formulario
-    shippingForm.submit();
-  } else {
-    // Mostrar un mensaje de error
-    showErrorMessage('Por favor, complete todos los campos obligatorios.');
+  const pagoCampos = ['forma_pago', 'tipo_envio'];
+  if (!pagoCampos.every(campo => document.getElementById(campo).value)) {
+    Swal.fire("Error", 'Por favor, seleccione una forma de pago y un tipo de envío.', "error").then(() => {
+      setTimeout(() => scrollearHasta('opciones-compra'), 200);
+    });
+    return false;
+  }
+
+  return true;
+}
+
+
+function mostrarError(mensaje, scrollId) {
+  Swal.fire("Error", mensaje, "error").then(() => {
+    setTimeout(() => document.getElementById(scrollId).scrollIntoView({ behavior: 'smooth' }), 200);
+  });
+  return false;
+}
+
+// Enviar compra
+document.getElementById("opciones-compra").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (validarDatosCompra()) {
+    Swal.fire("Éxito", "Compra realizada con éxito.", "success").then(() => {
+      productos = [];
+      localStorage.removeItem("cartItems");
+      mostrarProductos();
+      document.getElementById("opciones-compra").reset();
+    });
   }
 });
 
-// Función para mostrar un mensaje de error
-function showErrorMessage(message) {
-  // Crear un elemento de alerta y mostrarlo en la página
-  const alert = document.createElement('div');
-  alert.classList.add('alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
-  alert.setAttribute('role', 'alert');
-  alert.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-  document.body.appendChild(alert);
-}
-
-function scrollToOpcionesCompra() {
-  // Desplaza la página hacia el contenedor de opciones de compra
-  document.getElementById('opcionesCompra').scrollIntoView({ behavior: 'smooth' });
-}
+// Inicializar vista del carrito
+mostrarProductos();
+document.querySelector("#opciones-compra select:nth-of-type(2)").addEventListener("change", recalcularTotal);
