@@ -19,8 +19,15 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
       <div class="container">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -36,25 +43,31 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="cart.html">
-                Mi carrito <span id="cart-count-badge" class="badge bg-secondary">0</span>
+                Mi carrito
+                <span id="cart-count-badge" class="badge bg-secondary">0</span>
               </a>
-            </li>            
+            </li>
             <li class="nav-item">
               <div class="dropdown">
-                <a
-                  id="user"
-                  class="btn btn-secondary toggle-dropdown"
-                  href="#"
-                >
+                <a id="user" class="btn btn-secondary toggle-dropdown" href="#">
                   Usuario
                 </a>
                 <ul class="dropdown-menu dropdown-menu-custom">
-                  <li><a class="dropdown-item" href="/cart.html">Carrito</a></li>
-                  <li><a class="dropdown-item" href="/my-profile.html">Mi perfil</a></li>
-                  <li><button class="dropdown-item" id="cerrarSesion">Cerrar sesión</button></li>
+                  <li>
+                    <a class="dropdown-item" href="/cart.html">Carrito</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/my-profile.html"
+                      >Mi perfil</a
+                    >
+                  </li>
+                  <li>
+                    <button class="dropdown-item" id="cerrarSesion">
+                      Cerrar sesión
+                    </button>
+                  </li>
                 </ul>
               </div>
-              
             </li>
           </ul>
         </div>
@@ -72,8 +85,7 @@
                 <th class="text-end">Precio</th>
               </tr>
             </thead>
-            <tbody id="tabla">
-            </tbody>
+            <tbody id="tabla"></tbody>
             <tfoot>
               <tr class="border-top border-dark">
                 <th>Total</th>
@@ -82,52 +94,33 @@
             </tfoot>
           </table>
         </div>
-        <p class="moneda mt-4 d-flex">
-          Moneda <span id="moneda"></span>
-        </p>
+        <p class="moneda mt-4 d-flex">Moneda <span id="moneda"></span></p>
         <div class="d-flex justify-content-center mt-4">
-          <button class="btn btn-dark btn-lg" onclick="showShippingForm()">Comprar</button>
+          <button
+            class="btn btn-dark btn-lg"
+            onclick="scrollearHasta('opciones-envio')"
+          >
+            Comprar
+          </button>
         </div>
       </aside>
       <section>
         <header>
           <h2 class="fs-3 pb-2">
-            Productos seleccionados <span id="cantidadProductos" class="badge bg-secondary"></span>
+            Productos seleccionados
+            <span id="cantidadProductos" class="badge bg-secondary"></span>
           </h2>
         </header>
-        <ul class="container" id="productosSeleccionados">
-          
-        </ul>
+        <ul class="container" id="productosSeleccionados"></ul>
       </section>
     </main>
-    <footer class="text-muted">
-      <div class="container">
-        <p class="float-end">
-          <a href="#">Volver arriba</a>
-        </p>
-        <p>
-          Este sitio forma parte de
-          <a href="https://jovenesaprogramar.edu.uy/" target="_blank"
-            >Jovenes a Programar</a
-          >
-        </p>
-      </div>
-    </footer>
-    <div id="spinner-wrapper">
-      <div class="lds-ring">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-    
-    <div class="shipping-direction" id="shipping-form">
+
+    <div class="opciones-envio" id="opciones-envio">
       <h2>Dirección de envío</h2>
-      <form id="shipping-form-container">
+      <form id="container-opciones-envio">
         <div>
-          <label for="department">Departamento</label>
-          <select id="department" required>
+          <label for="departamento">Departamento</label>
+          <select id="departamento" name="departamento" required>
             <option value="">Seleccione un departamento</option>
             <option value="montevideo">Montevideo</option>
             <option value="artigas">Artigas</option>
@@ -151,64 +144,76 @@
           </select>
         </div>
         <div>
-          <label for="locality">Localidad</label>
-          <input type="text" id="locality" required />
+          <label for="localidad">Localidad</label>
+          <input type="text" id="localidad" name="localidad" required />
         </div>
         <div>
-          <label for="street">Calle</label>
-          <input type="text" id="street" required />
+          <label for="calle">Calle</label>
+          <input type="text" id="calle" name="calle" required />
         </div>
         <div>
-          <label for="number">Número</label>
-          <input type="text" id="number" required />
+          <label for="numero">Número</label>
+          <input type="text" id="numero" name="numero" required />
+          <!-- Es tipo texto porque a veces la numeracion tiene letras -->
         </div>
         <div>
-          <label for="apartment">Esquina</label>
-          <input type="text" id="apartment" required />
+          <label for="apartamento">Esquina</label>
+          <input type="text" id="apartamento" name="apartamento" required />
         </div>
-        <button type="button" class="btn btn-dark btn-lg" onclick="scrollToOpcionesCompra()">Siguiente ></button>
-</form>
+        <button
+          type="button"
+          class="btn btn-dark btn-lg"
+          onclick="scrollearHasta('opciones-compra')"
+        >
+          Siguiente >
+        </button>
       </form>
-      </form>
-    </div><br><br><br><br>
-    
-    <div id="opcionesCompra" class="opciones-compra-container">
+    </div>
+
+    <form id="opciones-compra" class="opciones-compra-container">
       <div class="opciones-formulario">
-          <h4>Forma de Pago</h4>
-          <select>
-              <option value="credito">Tarjeta de crédito</option>
-              <option value="debito">Tarjeta de débito</option>
-              <option value="efectivo">Efectivo</option>
-          </select>
-  
-          <h4>Tipo de Envío</h4>
-          <select>
-              <option value="estandar">Estándar (Gratis)</option>
-              <option value="express">Express 24 horas (10%)</option>
-              <option value="premium">Premium 2 a 5 días (15%)</option>
-          </select>
+        <label for="forma_pago">Forma de Pago</label>
+        <select id="forma_pago" name="forma_pago">
+          <option value="credito">Tarjeta de crédito</option>
+          <option value="debito">Tarjeta de débito</option>
+          <option value="efectivo">Efectivo</option>
+        </select>
+
+        <label for="tipo_envio">Tipo de Envío</label>
+        <select id="tipo_envio" name="tipo_envio">
+          <option value="estandar">Estándar (Gratis)</option>
+          <option value="express">Express 24 horas (10%)</option>
+          <option value="premium">Premium 2 a 5 días (15%)</option>
+        </select>
       </div>
 
- 
-  
       <div class="resumen-total">
-          <h4>Subtotal</h4>
-          <p>Productos: <span id="subtotalProductos">$0</span></p>
-          <p>Envío: <span id="costoEnvio">$0</span></p>
-          <p><strong>Total: <span id="totalCompra">$0</span></strong></p>
-          <div> <button id="finish-purchase" onclick="finalizarCompra()">Finalizar compra</button></div>
-        </div>
-          
-          
-     
-  </div><br><br><br>
+        <h4>Subtotal</h4>
+        <p>Productos: <span id="subtotalProductos">$0</span></p>
+        <p>Envío: <span id="costoEnvio">$0</span></p>
+        <p>
+          <strong>Total: <span id="totalCompra">$0</span></strong>
+        </p>
+        <button type="submit" class="finalizar-compra">Finalizar compra</button>
+      </div>
+    </form>
 
-
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-end">
+          <a href="#">Volver arriba</a>
+        </p>
+        <p>
+          Este sitio forma parte de
+          <a href="https://jovenesaprogramar.edu.uy/" target="_blank"
+            >Jovenes a Programar</a
+          >
+        </p>
+      </div>
+    </footer>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/init.js"></script>
     <script src="js/cart.js"></script>
-    
-    
-    
   </body>
 </html>

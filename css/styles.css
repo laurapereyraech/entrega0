@@ -458,7 +458,7 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 /* Formulario de envío */
-.shipping-direction {
+.opciones-envio {
  max-width: 400px;
  margin: 50px auto;
  padding: 30px;
@@ -468,33 +468,33 @@ tbody, td, tfoot, th, thead, tr {
  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.shipping-direction h2 {
+.opciones-envio h2 {
  text-align: center;
  margin-bottom: 30px;
  color: #000000;
  font-weight: bold;
 }
 
-.shipping-direction form {
+.opciones-envio form {
  display: grid;
  grid-template-columns: 1fr;
  grid-gap: 20px;
 }
 
-.shipping-direction label {
+.opciones-envio label {
  font-weight: bold;
  color: #000000;
 }
 
-.shipping-direction input,
-.shipping-direction select {
+.opciones-envio input,
+.opciones-envio select {
  width: 100%;
  padding: 10px;
  border: 1px solid #ccc;
  border-radius: 5px;
 }
 
-#shipping-form-container button[type="submit"] {
+#container-opciones-envio button[type="submit"] {
  background-color: #000000;
  color: #FEE3F5;
  border: none;
@@ -505,7 +505,7 @@ tbody, td, tfoot, th, thead, tr {
  transition: background-color 0.3s ease;
 }
 
-#shipping-form-container button[type="submit"]:hover {
+#container-opciones-envio button[type="submit"]:hover {
  background-color: #333333;
  color: #FEE3F5;
 }
@@ -529,7 +529,7 @@ tbody, td, tfoot, th, thead, tr {
 
 /* Opciones de compra segundo formulario */
 
-#opcionesCompra {
+#opciones-compra {
   margin-top: 250px; 
   padding: 20px;
   background-color: #ffffff;
@@ -541,14 +541,14 @@ tbody, td, tfoot, th, thead, tr {
   margin-right: auto;
   margin-bottom: 250px;
 }
-#opcionesCompra h4 {
+#opciones-compra h4 {
   font-size: 1.25rem;
   color: #000000;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-#opcionesCompra select {
+#opciones-compra select {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -557,33 +557,32 @@ tbody, td, tfoot, th, thead, tr {
   font-size: 1rem;
   color: #000000;
   background-color: #f8f9fa; 
-  appearance: none;
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-#opcionesCompra p {
+#opciones-compra p {
   font-size: 1rem;
   margin-bottom: 5px;
   color: #000000;
 }
 
-#opcionesCompra strong {
+#opciones-compra strong {
   font-size: 1.2rem;
   color: #212529;
 }
 
-#opcionesCompra span {
+#opciones-compra span {
   font-weight: bold;
   color: #000000;
 }
 
-#opcionesCompra .summary {
+#opciones-compra .summary {
   margin-top: 20px;
   border-top: 1px solid #ced4da;
   padding-top: 10px;
 }
 
-button#finish-purchase {
+.finalizar-compra {
   display: block;
   width: 100%;
   padding: 10px;
@@ -596,10 +595,9 @@ button#finish-purchase {
   transition: background-color 0.3s ease;
 }
 
-button#finish-purchase:hover {
+.finalizar-compra:hover {
   background-color: #333333;
 }
-
 
 /* Contenedor general para organizar en filas */
 .opciones-compra-container {
@@ -633,21 +631,18 @@ button#finish-purchase:hover {
 }
 
 /* Estilo del botón de finalizar compra */
-#finish-purchase {
+.finalizar-compra {
+  display: flex;
+  align-items: center;
   margin-top: 40px;
-  width: 30px;
-  padding: 30px;
-  color: #000000; 
   border-radius: 5px;
   font-weight: bold;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-   align-items: center;
-  
 }
 
 
-#finish-purchase:hover {
+.finalizar-compra:hover {
   background-color: #F78FB3; 
 }
