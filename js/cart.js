@@ -1,26 +1,61 @@
+const FIXER_API_URL = "https://data.fixer.io/api/latest";
+const FIXER_API_KEY = "78b5e230cc134cc75d0d7eabf3105e8c";
+
 // Carga inicial de productos desde localStorage
 let productos = JSON.parse(localStorage.getItem("cartItems")) || [];
+let dolarAPeso = 40; // Valor aproximado por si Fixer falla
 
 // Mostrar productos en el carrito y actualizar cantidades y totales
-function mostrarProductos() {
+async function mostrarProductos() {
   document.getElementById("productosSeleccionados").innerHTML = "";
   document.getElementById("tabla").innerHTML = "";
-  let total = 0;
+  let totalUSD = 0;
+  let totalUYU = 0;
   let totalItems = 0;
-  
+
   if (!productos.length) {
     actualizarVistaVacia();
   } else {
     productos.forEach((product, index) => {
       const subtotal = product.unitCost * product.count;
-      total += subtotal;
       totalItems += product.count;
+
+      if (product.currency === "USD") {
+        totalUSD += subtotal;
+      } else if (product.currency === "UYU") {
+        totalUYU += subtotal;
+      }
+
       agregarFilaTabla(product, index, subtotal);
       agregarCardProducto(product, index);
     });
 
-    actualizarTotales(total, totalItems);
+    const tasaCambio = await obtenerTasaCambio();
+    const totalEnPesos = totalUYU + totalUSD * tasaCambio;
+
+    actualizarTotales(totalEnPesos, totalItems, tasaCambio);
   }
+}
+
+// Obtener tasa de cambio del dólar
+async function obtenerTasaCambio() {
+  try {
+    const response = await fetch(`${FIXER_API_URL}?access_key=${FIXER_API_KEY}&symbols=USD,UYU`);
+    if (response.ok) {
+      const data = await response.json();
+      const tasa = data.rates.UYU / data.rates.USD;
+      return tasa || dolarAPeso;
+    } else {
+      mostrarAdvertenciaFixer();
+    }
+  } catch (error) {
+    mostrarAdvertenciaFixer();
+  }
+  return dolarAPeso; // Valor aproximado en caso de error
+}
+
+function mostrarAdvertenciaFixer() {
+  Swal.fire("Advertencia", "No se pudo obtener la tasa de cambio actual. Se usará un valor aproximado.", "warning");
 }
 
 function actualizarVistaVacia() {
@@ -34,10 +69,9 @@ function agregarFilaTabla(product, index, subtotal) {
   const fila = document.createElement("tr");
   fila.innerHTML = `
     <td>${product.name} x<span id="count-${index}">${product.count}</span></td>
-    <td class="text-end">$<span id="subtotal-${index}">${subtotal.toFixed(2)}</span></td>
+    <td class="text-end">${product.currency} $<span id="subtotal-${index}">${subtotal.toFixed(2)}</span></td>
   `;
   document.getElementById("tabla").appendChild(fila);
-  document.getElementById("moneda").textContent = product.currency;
 }
 
 function agregarCardProducto(product, index) {
@@ -58,10 +92,11 @@ function agregarCardProducto(product, index) {
   card.querySelector(`input[name="cantidad"]`).addEventListener("input", (event) => actualizarCantidad(event, index));
 }
 
-function actualizarTotales(total, totalItems) {
+function actualizarTotales(totalEnPesos, totalItems, tasaCambio) {
   document.getElementById("cantidadProductos").textContent = productos.length;
   document.getElementById("cart-count-badge").textContent = totalItems;
-  document.getElementById("total").textContent = `Total: $${total.toFixed(2)}`;
+  document.getElementById("total").textContent = `UYU ${totalEnPesos.toFixed(2)}`;
+  document.getElementById("moneda").textContent = `Tasa de cambio: 1 USD = ${tasaCambio.toFixed(2)} UYU`;
 }
 
 // Actualizar cantidad de producto
@@ -74,25 +109,7 @@ function actualizarCantidad(event, index) {
 
 // Recalcular total del carrito
 function recalcularTotal() {
-  let total = 0;
-  productos.forEach(product => total += product.unitCost * product.count);
-
-  const tipoEnvio = document.querySelector("#opciones-compra select:nth-of-type(2)").value;
-  const costoEnvio = calcularCostoEnvio(total, tipoEnvio);
-
-  actualizarVistaTotales(total, costoEnvio);
-}
-
-function calcularCostoEnvio(total, tipoEnvio) {
-  const tarifas = { express: 0.07, premium: 0.15, estandar: 0.05 };
-  return total * (tarifas[tipoEnvio] || 0);
-}
-
-function actualizarVistaTotales(total, costoEnvio) {
-  document.getElementById("subtotalProductos").textContent = `$${total.toFixed(2)}`;
-  document.getElementById("costoEnvio").textContent = `$${costoEnvio.toFixed(2)}`;
-  document.getElementById("totalCompra").textContent = `$${(total + costoEnvio).toFixed(2)}`;
-  document.getElementById("cart-count-badge").textContent = productos.reduce((acc, product) => acc + product.count, 0);
+  mostrarProductos(); // Se vuelve a calcular el total
 }
 
 function actualizarVistaLocalStorage() {
@@ -104,49 +121,6 @@ function eliminarProducto(index) {
   productos.splice(index, 1);
   actualizarVistaLocalStorage();
   mostrarProductos();
-}
-
-function scrollearHasta(id) {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-  }
-}
-
-// Validar datos de compra
-function validarDatosCompra() {
-  if (!productos.length) {
-    Swal.fire("Error", 'Por favor, agregue al menos un producto al carrito.', "error").then(() => {
-      setTimeout(() => scrollearHasta('cart-count-badge'), 200);
-    });
-    return false;
-  }
-
-  const direccionCampos = ['departamento', 'localidad', 'calle', 'numero', 'apartamento'];
-  if (!direccionCampos.every(campo => document.getElementById(campo).value)) {
-    Swal.fire("Error", 'Por favor, complete todos los campos de dirección.', "error").then(() => {
-      setTimeout(() => scrollearHasta('opciones-envio'), 200);
-    });
-    return false;
-  }
-
-  const pagoCampos = ['forma_pago', 'tipo_envio'];
-  if (!pagoCampos.every(campo => document.getElementById(campo).value)) {
-    Swal.fire("Error", 'Por favor, seleccione una forma de pago y un tipo de envío.', "error").then(() => {
-      setTimeout(() => scrollearHasta('opciones-compra'), 200);
-    });
-    return false;
-  }
-
-  return true;
-}
-
-
-function mostrarError(mensaje, scrollId) {
-  Swal.fire("Error", mensaje, "error").then(() => {
-    setTimeout(() => document.getElementById(scrollId).scrollIntoView({ behavior: 'smooth' }), 200);
-  });
-  return false;
 }
 
 // Enviar compra
