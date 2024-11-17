@@ -456,14 +456,17 @@ tbody, td, tfoot, th, thead, tr {
  border: none;
 }
 
+
+
+ /* Media para hacer ajustes a pantallas pequeñas pantallas pequeñas */
 @media (max-width: 768px) {
   .carrito {
-    grid-template-columns: 1fr; /* Pasa de dos columnas a una sola en pantallas pequeñas */
+    grid-template-columns: 1fr; 
   }
 
   .carrito aside, .carrito section {
     min-width: 100%;
-    padding: 1rem; /* Reduce el padding para pantallas pequeñas */
+    padding: 1rem; 
   }
 
   .carrito .tabla {
@@ -471,11 +474,11 @@ tbody, td, tfoot, th, thead, tr {
   }
 
   .carrito input {
-    width: 2.5rem; /* Ajuste de tamaño de input en pantallas pequeñas */
+    width: 2.5rem;
   }
 
   .carrito ul li article img {
-    height: 65px; /* Reduce el tamaño de las imágenes en pantallas pequeñas */
+    height: 65px; 
   }
 }
 
@@ -499,6 +502,7 @@ tbody, td, tfoot, th, thead, tr {
  border: 1px solid #ccc;
  border-radius: 10px;
  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+ margin-top: 300px;
 }
 
 .opciones-envio h2 {
@@ -560,7 +564,7 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 
-/* Opciones de compra segundo formulario */
+/* Opciones de compra  formulario */
 
 #opciones-compra {
   margin-top: 250px; 
