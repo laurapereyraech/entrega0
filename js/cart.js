@@ -131,6 +131,7 @@ async function recalcularTotal() {
   const tasaCambio = await obtenerTasaCambio(); // Obtener la tasa de cambio actual
   let subtotalEnPesos = 0;
 
+  // Calcular el subtotal en pesos
   productos.forEach((product) => {
     const subtotalProducto = product.unitCost * product.count;
     const subtotalEnPesosProducto =
@@ -138,12 +139,28 @@ async function recalcularTotal() {
     subtotalEnPesos += subtotalEnPesosProducto;
   });
 
-  // Actualizar el total en la tabla
+  // Mostrar el subtotal en pesos (sin envío)
   document.getElementById("total").textContent = `UYU ${subtotalEnPesos.toFixed(2)}`;
 
-  // Mostrar la tasa de cambio en el DOM
+  // Calcular el costo de envío
+  const tipoEnvio = document.querySelector("#opciones-compra select:nth-of-type(2)").value || "estandar";
+  const porcentajeEnvio = { express: 0.07, premium: 0.15, estandar: 0.05 }[tipoEnvio];
+  const costoEnvio = subtotalEnPesos * porcentajeEnvio;
+
+  // Calcular y mostrar el total con envío
+  const totalConEnvio = subtotalEnPesos + costoEnvio;
+  document.getElementById("subtotalProductos").textContent = `UYU ${subtotalEnPesos.toFixed(2)}`;
+  document.getElementById("costoEnvio").textContent = `UYU ${costoEnvio.toFixed(2)}`;
+  document.getElementById("totalCompra").textContent = `UYU ${totalConEnvio.toFixed(2)}`;
+
+  // Actualizar la tasa de cambio en el DOM
   document.getElementById("moneda").textContent = `Tasa de cambio: 1 USD = ${tasaCambio.toFixed(2)} UYU`;
+
+  // Actualizar el total de productos en el badge
+  const totalItems = productos.reduce((acc, product) => acc + product.count, 0);
+  document.getElementById("cart-count-badge").textContent = totalItems;
 }
+
 
 
 function actualizarVistaLocalStorage() {
@@ -169,6 +186,7 @@ function setupEventListeners() {
         localStorage.removeItem("cartItems");
         mostrarProductos();
         document.getElementById("opciones-compra").reset();
+        window.location.reload();
       });
     }
   });
