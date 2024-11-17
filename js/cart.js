@@ -1,40 +1,47 @@
 const FIXER_API_URL = "https://data.fixer.io/api/latest";
 const FIXER_API_KEY = "78b5e230cc134cc75d0d7eabf3105e8c";
 
-// Carga inicial de productos desde localStorage
 let productos = JSON.parse(localStorage.getItem("cartItems")) || [];
 let dolarAPeso = 40; // Valor aproximado por si Fixer falla
 
-// Mostrar productos en el carrito y actualizar cantidades y totales
+// Inicializar la vista y configurar eventos
+async function initCarrito() {
+  await mostrarProductos();
+  recalcularTotal();
+  setupEventListeners();
+}
+
+// Mostrar productos en el carrito y actualizar vista
 async function mostrarProductos() {
-  document.getElementById("productosSeleccionados").innerHTML = "";
-  document.getElementById("tabla").innerHTML = "";
+  const contenedorProductos = document.getElementById("productosSeleccionados");
+  const tablaProductos = document.getElementById("tabla");
+  contenedorProductos.innerHTML = "";
+  tablaProductos.innerHTML = "";
+
+  if (!productos.length) {
+    actualizarVistaVacia();
+    return;
+  }
+
   let totalUSD = 0;
   let totalUYU = 0;
   let totalItems = 0;
 
-  if (!productos.length) {
-    actualizarVistaVacia();
-  } else {
-    productos.forEach((product, index) => {
-      const subtotal = product.unitCost * product.count;
-      totalItems += product.count;
+  productos.forEach((product, index) => {
+    const subtotal = product.unitCost * product.count;
+    totalItems += product.count;
 
-      if (product.currency === "USD") {
-        totalUSD += subtotal;
-      } else if (product.currency === "UYU") {
-        totalUYU += subtotal;
-      }
+    if (product.currency === "USD") totalUSD += subtotal;
+    if (product.currency === "UYU") totalUYU += subtotal;
 
-      agregarFilaTabla(product, index, subtotal);
-      agregarCardProducto(product, index);
-    });
+    agregarFilaTabla(product, index, subtotal);
+    agregarCardProducto(product, index);
+  });
 
-    const tasaCambio = await obtenerTasaCambio();
-    const totalEnPesos = totalUYU + totalUSD * tasaCambio;
+  const tasaCambio = await obtenerTasaCambio();
+  const totalEnPesos = totalUYU + totalUSD * tasaCambio;
 
-    actualizarTotales(totalEnPesos, totalItems, tasaCambio);
-  }
+  actualizarTotales(totalEnPesos, totalItems, tasaCambio);
 }
 
 // Obtener tasa de cambio del dólar
@@ -43,15 +50,13 @@ async function obtenerTasaCambio() {
     const response = await fetch(`${FIXER_API_URL}?access_key=${FIXER_API_KEY}&symbols=USD,UYU`);
     if (response.ok) {
       const data = await response.json();
-      const tasa = data.rates.UYU / data.rates.USD;
-      return tasa || dolarAPeso;
-    } else {
-      mostrarAdvertenciaFixer();
+      return (data.rates.UYU / data.rates.USD) || dolarAPeso;
     }
   } catch (error) {
-    mostrarAdvertenciaFixer();
+    console.error("Error obteniendo tasa de cambio:", error);
   }
-  return dolarAPeso; // Valor aproximado en caso de error
+  mostrarAdvertenciaFixer();
+  return dolarAPeso;
 }
 
 function mostrarAdvertenciaFixer() {
@@ -102,14 +107,22 @@ function actualizarTotales(totalEnPesos, totalItems, tasaCambio) {
 // Actualizar cantidad de producto
 function actualizarCantidad(event, index) {
   const newQuantity = parseInt(event.target.value);
-  productos[index].count = newQuantity;
+  productos[index].count = isNaN(newQuantity) ? 0 : newQuantity;
   recalcularTotal();
   actualizarVistaLocalStorage();
 }
 
 // Recalcular total del carrito
 function recalcularTotal() {
-  mostrarProductos(); // Se vuelve a calcular el total
+  let subtotal = productos.reduce((acc, product) => acc + product.unitCost * product.count, 0);
+  const tipoEnvio = document.querySelector("#opciones-compra select:nth-of-type(2)").value || "estandar";
+  const porcentajeEnvio = { express: 0.07, premium: 0.15, estandar: 0.05 }[tipoEnvio];
+  const costoEnvio = subtotal * (porcentajeEnvio || 0);
+
+  document.getElementById("subtotalProductos").textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById("costoEnvio").textContent = `$${costoEnvio.toFixed(2)}`;
+  document.getElementById("totalCompra").textContent = `$${(subtotal + costoEnvio).toFixed(2)}`;
+  document.getElementById("cart-count-badge").textContent = productos.reduce((acc, p) => acc + p.count, 0);
 }
 
 function actualizarVistaLocalStorage() {
@@ -121,64 +134,47 @@ function eliminarProducto(index) {
   productos.splice(index, 1);
   actualizarVistaLocalStorage();
   mostrarProductos();
+  recalcularTotal();
 }
 
-
-function scrollearHasta(id) {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-  }
+// Configurar eventos
+function setupEventListeners() {
+  document.querySelector("#opciones-compra select:nth-of-type(2)").addEventListener("change", recalcularTotal);
+  document.getElementById("opciones-compra").addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (validarDatosCompra()) {
+      Swal.fire("Éxito", "Compra realizada con éxito.", "success").then(() => {
+        productos = [];
+        localStorage.removeItem("cartItems");
+        mostrarProductos();
+        document.getElementById("opciones-compra").reset();
+      });
+    }
+  });
 }
 
 // Validar datos de compra
 function validarDatosCompra() {
-  if (!productos.length) {
-    Swal.fire("Error", 'Por favor, agregue al menos un producto al carrito.', "error").then(() => {
-      setTimeout(() => scrollearHasta('cart-count-badge'), 200);
-    });
-    return false;
+  if (!productos.length) return mostrarError("Por favor, agregue al menos un producto al carrito.", "cart-count-badge");
+  const camposDireccion = ["departamento", "localidad", "calle", "numero", "apartamento"];
+  if (!camposDireccion.every((id) => document.getElementById(id).value)) {
+    return mostrarError("Complete todos los campos de dirección.", "opciones-envio");
   }
-
-  const direccionCampos = ['departamento', 'localidad', 'calle', 'numero', 'apartamento'];
-  if (!direccionCampos.every(campo => document.getElementById(campo).value)) {
-    Swal.fire("Error", 'Por favor, complete todos los campos de dirección.', "error").then(() => {
-      setTimeout(() => scrollearHasta('opciones-envio'), 200);
-    });
-    return false;
+  if (!["forma_pago", "tipo_envio"].every((id) => document.getElementById(id).value)) {
+    return mostrarError("Seleccione forma de pago y tipo de envío.", "opciones-compra");
   }
-
-  const pagoCampos = ['forma_pago', 'tipo_envio'];
-  if (!pagoCampos.every(campo => document.getElementById(campo).value)) {
-    Swal.fire("Error", 'Por favor, seleccione una forma de pago y un tipo de envío.', "error").then(() => {
-      setTimeout(() => scrollearHasta('opciones-compra'), 200);
-    });
-    return false;
-  }
-
   return true;
 }
 
 function mostrarError(mensaje, scrollId) {
-  Swal.fire("Error", mensaje, "error").then(() => {
-    setTimeout(() => document.getElementById(scrollId).scrollIntoView({ behavior: 'smooth' }), 200);
-  });
+  Swal.fire("Error", mensaje, "error").then(() => setTimeout(() => scrollearHasta(scrollId), 200));
   return false;
 }
 
-// Enviar compra
-document.getElementById("opciones-compra").addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (validarDatosCompra()) {
-    Swal.fire("Éxito", "Compra realizada con éxito.", "success").then(() => {
-      productos = [];
-      localStorage.removeItem("cartItems");
-      mostrarProductos();
-      document.getElementById("opciones-compra").reset();
-    });
-  }
-});
+function scrollearHasta(id) {
+  const element = document.getElementById(id);
+  if (element) element.scrollIntoView({ behavior: "smooth" });
+}
 
-// Inicializar vista del carrito
-mostrarProductos();
-document.querySelector("#opciones-compra select:nth-of-type(2)").addEventListener("change", recalcularTotal);
+// Inicializar vista
+initCarrito();

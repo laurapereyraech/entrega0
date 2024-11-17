@@ -388,17 +388,17 @@ body.night-mode .btn:hover {
  width: 100%; 
  display: grid;
  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
- gap: 1rem;
+ gap: 0;
 }
 
 .carrito aside {
  background-color: #F7AFDF;
- min-width: 33vw;
+ min-width: calc(33vw - 8rem);
 }
 
 .carrito section {
  background-color: #fff;
- min-width: 67vw;
+ min-width: calc(67vw - 10rem);
 }
 
 .carrito section, .carrito aside {
@@ -425,7 +425,7 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .carrito article {
- min-width: 100% ;
+  min-width: 100% 
 }
 
 .carrito ul li article div {
