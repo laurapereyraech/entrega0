@@ -1,5 +1,5 @@
 const FIXER_API_URL = "https://data.fixer.io/api/latest";
-const FIXER_API_KEY = "78b5e230cc134cc75d0d7eabf3105e8c";
+const FIXER_API_KEY = "6500f76bacdeffd8288b2d26c41b94a7";
 
 let productos = JSON.parse(localStorage.getItem("cartItems")) || [];
 let dolarAPeso = 40; // Valor aproximado por si Fixer falla
@@ -50,14 +50,21 @@ async function obtenerTasaCambio() {
     const response = await fetch(`${FIXER_API_URL}?access_key=${FIXER_API_KEY}&symbols=USD,UYU`);
     if (response.ok) {
       const data = await response.json();
-      return (data.rates.UYU / data.rates.USD) || dolarAPeso;
+      if (data.rates && data.rates.USD && data.rates.UYU) {
+        return data.rates.UYU / data.rates.USD;
+      } else {
+        console.error("Tasas de cambio no disponibles en la respuesta:", data);
+      }
+    } else {
+      console.error("Error en la respuesta de Fixer:", response.status);
     }
   } catch (error) {
     console.error("Error obteniendo tasa de cambio:", error);
+    mostrarAdvertenciaFixer();
+    return dolarAPeso; // Valor aproximado en caso de error
   }
-  mostrarAdvertenciaFixer();
-  return dolarAPeso;
 }
+
 
 function mostrarAdvertenciaFixer() {
   Swal.fire("Advertencia", "No se pudo obtener la tasa de cambio actual. Se usará un valor aproximado.", "warning");
@@ -79,6 +86,20 @@ function agregarFilaTabla(product, index, subtotal) {
   document.getElementById("tabla").appendChild(fila);
 }
 
+// Actualizar cantidad de producto
+function actualizarCantidad(event, index) {
+  const nuevaCantidad = parseInt(event.target.value);
+  if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
+    Swal.fire("Advertencia", "La cantidad debe ser al menos 1.", "warning");
+    event.target.value = productos[index].count; // Restaurar la cantidad anterior
+    return;
+  }
+  productos[index].count = nuevaCantidad; // Actualizar la cantidad
+  actualizarVistaLocalStorage(); // Guardar cambios en localStorage
+  mostrarProductos(); // Actualizar la vista con los cambios
+  recalcularTotal(); // Recalcular los totales del carrito
+}
+
 function agregarCardProducto(product, index) {
   const card = document.createElement("li");
   card.innerHTML = `
@@ -89,7 +110,7 @@ function agregarCardProducto(product, index) {
         <p class="mb-0"><span>${product.currency} $</span>${product.unitCost}</p>
       </div>
       <label for="cantidad">x</label>
-      <input name="cantidad" type="number" value="${product.count}" min="1" data-index="${index}" />
+      <input name="cantidad" type="number" onclick="e => actualizarCantidad(e, ${index})" value="${product.count}" min="1" data-index="${index}" />
       <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">Eliminar</button>
     </article>
   `;
@@ -104,26 +125,26 @@ function actualizarTotales(totalEnPesos, totalItems, tasaCambio) {
   document.getElementById("moneda").textContent = `Tasa de cambio: 1 USD = ${tasaCambio.toFixed(2)} UYU`;
 }
 
-// Actualizar cantidad de producto
-function actualizarCantidad(event, index) {
-  const newQuantity = parseInt(event.target.value);
-  productos[index].count = isNaN(newQuantity) ? 0 : newQuantity;
-  recalcularTotal();
-  actualizarVistaLocalStorage();
-}
 
 // Recalcular total del carrito
-function recalcularTotal() {
-  let subtotal = productos.reduce((acc, product) => acc + product.unitCost * product.count, 0);
-  const tipoEnvio = document.querySelector("#opciones-compra select:nth-of-type(2)").value || "estandar";
-  const porcentajeEnvio = { express: 0.07, premium: 0.15, estandar: 0.05 }[tipoEnvio];
-  const costoEnvio = subtotal * (porcentajeEnvio || 0);
+async function recalcularTotal() {
+  const tasaCambio = await obtenerTasaCambio(); // Obtener la tasa de cambio actual
+  let subtotalEnPesos = 0;
 
-  document.getElementById("subtotalProductos").textContent = `$${subtotal.toFixed(2)}`;
-  document.getElementById("costoEnvio").textContent = `$${costoEnvio.toFixed(2)}`;
-  document.getElementById("totalCompra").textContent = `$${(subtotal + costoEnvio).toFixed(2)}`;
-  document.getElementById("cart-count-badge").textContent = productos.reduce((acc, p) => acc + p.count, 0);
+  productos.forEach((product) => {
+    const subtotalProducto = product.unitCost * product.count;
+    const subtotalEnPesosProducto =
+      product.currency === "USD" ? subtotalProducto * tasaCambio : subtotalProducto;
+    subtotalEnPesos += subtotalEnPesosProducto;
+  });
+
+  // Actualizar el total en la tabla
+  document.getElementById("total").textContent = `UYU ${subtotalEnPesos.toFixed(2)}`;
+
+  // Mostrar la tasa de cambio en el DOM
+  document.getElementById("moneda").textContent = `Tasa de cambio: 1 USD = ${tasaCambio.toFixed(2)} UYU`;
 }
+
 
 function actualizarVistaLocalStorage() {
   localStorage.setItem("cartItems", JSON.stringify(productos));
