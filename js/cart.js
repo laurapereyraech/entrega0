@@ -123,6 +123,49 @@ function eliminarProducto(index) {
   mostrarProductos();
 }
 
+
+function scrollearHasta(id) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+  }
+}
+
+// Validar datos de compra
+function validarDatosCompra() {
+  if (!productos.length) {
+    Swal.fire("Error", 'Por favor, agregue al menos un producto al carrito.', "error").then(() => {
+      setTimeout(() => scrollearHasta('cart-count-badge'), 200);
+    });
+    return false;
+  }
+
+  const direccionCampos = ['departamento', 'localidad', 'calle', 'numero', 'apartamento'];
+  if (!direccionCampos.every(campo => document.getElementById(campo).value)) {
+    Swal.fire("Error", 'Por favor, complete todos los campos de dirección.', "error").then(() => {
+      setTimeout(() => scrollearHasta('opciones-envio'), 200);
+    });
+    return false;
+  }
+
+  const pagoCampos = ['forma_pago', 'tipo_envio'];
+  if (!pagoCampos.every(campo => document.getElementById(campo).value)) {
+    Swal.fire("Error", 'Por favor, seleccione una forma de pago y un tipo de envío.', "error").then(() => {
+      setTimeout(() => scrollearHasta('opciones-compra'), 200);
+    });
+    return false;
+  }
+
+  return true;
+}
+
+function mostrarError(mensaje, scrollId) {
+  Swal.fire("Error", mensaje, "error").then(() => {
+    setTimeout(() => document.getElementById(scrollId).scrollIntoView({ behavior: 'smooth' }), 200);
+  });
+  return false;
+}
+
 // Enviar compra
 document.getElementById("opciones-compra").addEventListener("submit", (event) => {
   event.preventDefault();
