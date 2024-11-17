@@ -398,7 +398,7 @@ body.night-mode .btn:hover {
 
 .carrito section {
  background-color: #fff;
- min-width: calc(67vw - 10rem);
+ min-width: calc(67vw - 7rem);
 }
 
 .carrito section, .carrito aside {
@@ -484,11 +484,9 @@ tbody, td, tfoot, th, thead, tr {
 
 
 
-
-
 .moneda {
  background-color: #ffffff75;
- width: min-content;
+ width: 300px;
  padding: 1rem;
  gap: 4px;
 }
