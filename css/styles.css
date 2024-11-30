@@ -661,13 +661,13 @@ tbody, td, tfoot, th, thead, tr {
   align-items: center;
 }
 
-
+/* Bloque negro */
 .resumen-total h4, .resumen-total p, .resumen-total strong {
   color: #000000; 
   margin: 5px 0;
 }
 
-/* Estilo del botón de finalizar compra */
+/* Botón de finalizar compra */
 .finalizar-compra {
   display: flex;
   align-items: center;

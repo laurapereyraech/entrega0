@@ -120,21 +120,7 @@
     <script src="js/products.js"></script>
     <script src="js/init.js"></script>
   </div>
-  <script>
-    // Guardar el tema en localStorage al enviar el formulario
-    document.getElementById('profile-form').addEventListener('submit', function(event) {
-          event.preventDefault(); // Evita el envío del formulario por defecto
-  
-          // Guarda la preferencia del tema
-          const themeSwitch = document.getElementById('theme-switch');
-          localStorage.setItem('theme', themeSwitch.checked ? 'dark' : 'light');
-          applyTheme(); // Aplica el tema
-          alert('Preferencias guardadas'); // Mensaje de confirmación (puedes cambiarlo o eliminarlo)
-      });
-  
-      // Aplicar el tema al cargar la página
-      document.addEventListener('DOMContentLoaded', applyTheme);
-      </script>
+
   
     
   

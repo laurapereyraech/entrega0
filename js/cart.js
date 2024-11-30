@@ -9,6 +9,34 @@ async function initCarrito() {
   await mostrarProductos();
   recalcularTotal();
   setupEventListeners();
+
+  const data = {
+      idCarrito: 1, 
+      idCliente: 123, 
+      cantidad: productos[0].cantidad || 1, 
+      idProducto: productos[0].id 
+    };
+
+
+  fetch(CART_INFO_URL, {
+    method: "POST", 
+    headers: {
+      "Content-Type": "application/json" 
+    },
+    body: JSON.stringify(data) 
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(result => {
+      console.log("Respuesta del servidor:", result);
+    })
+    .catch(error => {
+      console.error("Hubo un error al enviar la solicitud:", error);
+    });
 }
 
 // Mostrar productos en el carrito y actualizar vista
